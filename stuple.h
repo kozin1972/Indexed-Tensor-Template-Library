@@ -184,7 +184,7 @@ namespace tpp
 					element_type(get<I>(ost)),
 					base_type(inds, ost) {}
 		template <typename OST, int ... V_TYPE>
-		inline stuple_base(const OST& ost, int_sequence<V_TYPE...> vn) noexcept(
+		inline stuple_base(const OST& ost, std::integer_sequence<int, V_TYPE...> vn) noexcept(
 				noexcept(element_type(valence_remover<OST, V_TYPE...>::template shape<I>(ost)))
 				&& noexcept(base_type(ost, vn))
 				):
@@ -201,7 +201,7 @@ namespace tpp
 		template <typename OST, typename ... Ts>
 		inline stuple_base(const std::tuple<Ts...>& inds, const OST& ost) noexcept {}
 		template <typename OST, int ... V_TYPE>
-		inline stuple_base(const OST& ost, int_sequence<V_TYPE...> vn) noexcept {}
+		inline stuple_base(const OST& ost, std::integer_sequence<int, V_TYPE...> vn) noexcept {}
 		stuple_base() = default;
 	};
 
@@ -419,12 +419,12 @@ namespace tpp
 	template <size_t SNUM, typename TS, typename ... SHAPES>
 	struct create_shapes_like;
 	template <size_t SNUM, typename ... TS, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct create_shapes_like<SNUM, type_sequence<TS...>, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
-		public create_shapes_like<SNUM+1, type_sequence<TS..., segment<V_TYPE, USAGE_FULL, 0,0> >, SHAPES...>
+	struct create_shapes_like<SNUM, type_pack<TS...>, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
+		public create_shapes_like<SNUM+1, type_pack<TS..., segment<V_TYPE, USAGE_FULL, 0,0> >, SHAPES...>
 	{
 	};
 	template <size_t SNUM, typename ... TS>
-	struct create_shapes_like<SNUM, type_sequence<TS...> >
+	struct create_shapes_like<SNUM, type_pack<TS...> >
 	{
 		using type=stuple<SNUM, SNUM, true, void, TS...>;
 	};
@@ -434,7 +434,7 @@ namespace tpp
 
 	template <size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES>
 	struct stuple_like<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >:
-		public create_shapes_like<0, type_sequence<>, SHAPES...>
+		public create_shapes_like<0, type_pack<>, SHAPES...>
 	{
 	};
 
@@ -442,15 +442,15 @@ namespace tpp
 //	struct increase_last_usage;
 //
 //	template <enum dSU MIN_USAGE, typename ... NSEQ, typename ... SEQ, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT>
-//	struct increase_last_usage<MIN_USAGE, type_sequence<NSEQ...>, type_sequence<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SEQ...> >
+//	struct increase_last_usage<MIN_USAGE, type_pack<NSEQ...>, type_pack<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SEQ...> >
 //	{
-//		using type=type_sequence<NSEQ..., sClass<V_TYPE, (MIN_USAGE<USAGE?USAGE:MIN_USAGE), USE_ALSO, PARENT>, SEQ...>;
+//		using type=type_pack<NSEQ..., sClass<V_TYPE, (MIN_USAGE<USAGE?USAGE:MIN_USAGE), USE_ALSO, PARENT>, SEQ...>;
 //	};
 //
 //	template <enum dSU MIN_USAGE, typename ... NSEQ>
-//	struct increase_last_usage<MIN_USAGE, type_sequence<NSEQ...>, type_sequence<> >
+//	struct increase_last_usage<MIN_USAGE, type_pack<NSEQ...>, type_pack<> >
 //	{
-//		using type=type_sequence<>;
+//		using type=type_pack<>;
 //	};
 
 //	template <typename NSC, typename NIC, typename PSC, typename INUMS, bool SEGMENT_NO_PARENT, bool FULL_SEGMENT, bool SLAVE_CREATED, bool GLUED, size_t GLUE_POINT, size_t GLUE_INUM, bool NEED_PARENT>
@@ -474,43 +474,43 @@ namespace tpp
 //
 //// common
 //	template <size_t OPOS, size_t POS, size_t GP, typename NEW_SHAPE, typename PARENT_SHAPE, typename ITYPE, typename INUM0, typename ... TNSC, typename ... TNIC, typename ... TPSC, typename ... TINUMS, typename ... NS, typename ... NI, typename ... NP, typename ... NIN, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, typename CREATED_SHAPE, typename NINUM>
-//	struct parenthesis_slave<OPOS, POS, GP, type_sequence<NEW_SHAPE, TNSC...>, type_sequence<ITYPE, TNIC...>, type_sequence<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, type_sequence<NI...>, type_sequence<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>
+//	struct parenthesis_slave<OPOS, POS, GP, type_pack<NEW_SHAPE, TNSC...>, type_pack<ITYPE, TNIC...>, type_pack<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, type_pack<NI...>, type_pack<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>
 //	{
-//		using update=typename parenthesis_slave<OPOS, POS, GP-1, type_sequence<TNSC...>, type_sequence<TNIC...>, type_sequence<TPSC...>, std::tuple<TINUMS...>, type_sequence<NS...,NEW_SHAPE>, type_sequence<ITYPE, NI...>, type_sequence<PARENT_SHAPE, NP...>, std::tuple<INUM0, NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>::update;
+//		using update=typename parenthesis_slave<OPOS, POS, GP-1, type_pack<TNSC...>, type_pack<TNIC...>, type_pack<TPSC...>, std::tuple<TINUMS...>, type_pack<NS...,NEW_SHAPE>, type_pack<ITYPE, NI...>, type_pack<PARENT_SHAPE, NP...>, std::tuple<INUM0, NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>::update;
 //	};
 //
 //// GLUE
 //	template <size_t OPOS, size_t POS, size_t GP, enum dSU N_USAGE, size_t N_USE_ALSO, typename PARENT_SHAPE, typename ITYPE, typename INUM0, typename ... TNSC, typename ... TNIC, typename ... TPSC, typename ... TINUMS, typename ... NS, typename ... NI, typename ... NP, typename ... NIN, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, enum dSU C_USAGE, typename NINUM>
-//	struct parenthesis_slave<OPOS, POS, GP, type_sequence<segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...>, type_sequence<ITYPE, TNIC...>, type_sequence<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, type_sequence<NI...>, type_sequence<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM>
+//	struct parenthesis_slave<OPOS, POS, GP, type_pack<segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...>, type_pack<ITYPE, TNIC...>, type_pack<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, type_pack<NI...>, type_pack<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM>
 //	{
-//		using shapes=typename increase_last_usage<USAGE_ENUM, type_sequence<>, type_sequence<NS..., segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...> >::type;
-//		using update=ind_data<shapes,type_sequence<NI..., ITYPE, TNIC...>, type_sequence<NP..., PARENT_SHAPE, TPSC...>, type_sequence<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
+//		using shapes=typename increase_last_usage<USAGE_ENUM, type_pack<>, type_pack<NS..., segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...> >::type;
+//		using update=ind_data<shapes,type_pack<NI..., ITYPE, TNIC...>, type_pack<NP..., PARENT_SHAPE, TPSC...>, type_pack<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
 //	};
 //
 //// GLUE && SLAVE
 //	template <size_t OPOS, size_t POS, size_t GP, enum dSU N_USAGE, typename PARENT_SHAPE, typename ITYPE, typename INUM0, typename ... TNSC, typename ... TNIC, typename ... TPSC, typename ... TINUMS, typename ... NS, typename ... NI, typename ... NP, typename ... NIN, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, enum dSU C_USAGE, typename NINUM>
-//	struct parenthesis_slave<OPOS, POS, GP, type_sequence<segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...>, type_sequence<ITYPE, TNIC...>, type_sequence<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, type_sequence<NI...>, type_sequence<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM>
+//	struct parenthesis_slave<OPOS, POS, GP, type_pack<segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...>, type_pack<ITYPE, TNIC...>, type_pack<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, type_pack<NI...>, type_pack<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM>
 //	{
-//		using shapes=typename increase_last_usage<USAGE_ENUM, type_sequence<>, type_sequence<NS..., segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...> >::type;
-//		using update=ind_data<shapes,type_sequence<NI..., ITYPE, TNIC...>, type_sequence<NP..., PARENT_SHAPE, TPSC...>, type_sequence<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
+//		using shapes=typename increase_last_usage<USAGE_ENUM, type_pack<>, type_pack<NS..., segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...> >::type;
+//		using update=ind_data<shapes,type_pack<NI..., ITYPE, TNIC...>, type_pack<NP..., PARENT_SHAPE, TPSC...>, type_pack<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
 //	};
 //
 //
 //// SLAVE
 //	template <size_t OPOS, size_t POS, size_t GP, template <int, enum dSU, size_t, size_t> class csClass, enum dSU N_USAGE, size_t N_PARENT, typename PARENT_SHAPE, typename ITYPE, typename INUM0, typename ... TNSC, typename ... TNIC, typename ... TPSC, typename ... TINUMS, typename ... NS, typename ... NI, typename ... NP, typename ... NIN, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, template <int, enum dSU, size_t, size_t> class crsClass, enum dSU C_USAGE, size_t C_PARENT, typename NINUM>
-//	struct parenthesis_slave<OPOS, POS, GP, type_sequence<csClass<I_V_TYPE, N_USAGE, 0, N_PARENT>, TNSC...>, type_sequence<ITYPE, TNIC...>, type_sequence<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, type_sequence<NI...>, type_sequence<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, crsClass<I_V_TYPE, C_USAGE, 0, C_PARENT>, NINUM>
+//	struct parenthesis_slave<OPOS, POS, GP, type_pack<csClass<I_V_TYPE, N_USAGE, 0, N_PARENT>, TNSC...>, type_pack<ITYPE, TNIC...>, type_pack<PARENT_SHAPE, TPSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, type_pack<NI...>, type_pack<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, crsClass<I_V_TYPE, C_USAGE, 0, C_PARENT>, NINUM>
 //	{
-//		using shapes=typename increase_last_usage<USAGE_ENUM, type_sequence<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT> >, type_sequence<NS..., csClass<I_V_TYPE, N_USAGE, POS, N_PARENT>, TNSC...> >::type;
-//		using update=ind_data<shapes,type_sequence<NI..., ITYPE, TNIC...,iClass<I_V_TYPE> >, type_sequence<NP..., PARENT_SHAPE, TPSC...,sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT> >,
-//				type_sequence<NIN..., INUM0, TINUMS..., NINUM>, false, false, true, false, GP, INUM0::value, C_PARENT?true:false>;
+//		using shapes=typename increase_last_usage<USAGE_ENUM, type_pack<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT> >, type_pack<NS..., csClass<I_V_TYPE, N_USAGE, POS, N_PARENT>, TNSC...> >::type;
+//		using update=ind_data<shapes,type_pack<NI..., ITYPE, TNIC...,iClass<I_V_TYPE> >, type_pack<NP..., PARENT_SHAPE, TPSC...,sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT> >,
+//				type_pack<NIN..., INUM0, TINUMS..., NINUM>, false, false, true, false, GP, INUM0::value, C_PARENT?true:false>;
 //	};
 //
 //// last
 //	template <size_t OPOS, size_t POS, size_t GP, typename ... NS, typename ... NI, typename ... NP, typename ... NIN, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, typename CREATED_SHAPE, typename NINUM>
-//	struct parenthesis_slave<OPOS, POS, GP, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<NS...>, type_sequence<NI...>, type_sequence<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>
+//	struct parenthesis_slave<OPOS, POS, GP, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<NS...>, type_pack<NI...>, type_pack<NP...>, std::tuple<NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>
 //	{
-//		using update=ind_data<type_sequence<CREATED_SHAPE, NS...>,type_sequence<NI..., iClass<I_V_TYPE> >, type_sequence<NP..., sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT> >,
-//				type_sequence<NIN..., NINUM>,
+//		using update=ind_data<type_pack<CREATED_SHAPE, NS...>,type_pack<NI..., iClass<I_V_TYPE> >, type_pack<NP..., sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT> >,
+//				type_pack<NIN..., NINUM>,
 //				check_shape<CREATED_SHAPE>::need_glue, check_shape<CREATED_SHAPE>::full_segment, false, false, 0, 0, check_shape<CREATED_SHAPE>::need_parent>;
 //	};
 
@@ -556,35 +556,35 @@ namespace tpp
 	struct finalize_parenthesis;
 
 	template <size_t MAX_CONT, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SRCSHAPES, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES>
-	struct finalize_parenthesis<MAX_CONT, type_sequence<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >:
-		public finalize_parenthesis<(CONT<MAX_CONT?CONT:MAX_CONT), type_sequence<SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...> >
+	struct finalize_parenthesis<MAX_CONT, type_pack<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >:
+		public finalize_parenthesis<(CONT<MAX_CONT?CONT:MAX_CONT), type_pack<SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...> >
 	{
-//		using type=typename finalize_parenthesis<type_sequence<SRCSHAPES...>, stuple<SNUM, false, LAST_EXISTS, IS_INDEXED, OST, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>, PREV_CONT>::type;
+//		using type=typename finalize_parenthesis<type_pack<SRCSHAPES...>, stuple<SNUM, false, LAST_EXISTS, IS_INDEXED, OST, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>, PREV_CONT>::type;
 	};
 
 	template <size_t MAX_CONT, int V_TYPE, size_t USE_ALSO, size_t PARENT, typename ... SRCSHAPES, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES>
-	struct finalize_parenthesis<MAX_CONT, type_sequence<segment<V_TYPE, USAGE_FULL, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >:
-		public finalize_parenthesis<MAX_CONT, type_sequence<SRCSHAPES...>, stuple<SNUM, (CONT+1<MAX_CONT?CONT+1:MAX_CONT), IS_INDEXED, OST, segment<V_TYPE, USAGE_FULL, USE_ALSO, PARENT>, SHAPES...> >
+	struct finalize_parenthesis<MAX_CONT, type_pack<segment<V_TYPE, USAGE_FULL, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >:
+		public finalize_parenthesis<MAX_CONT, type_pack<SRCSHAPES...>, stuple<SNUM, (CONT+1<MAX_CONT?CONT+1:MAX_CONT), IS_INDEXED, OST, segment<V_TYPE, USAGE_FULL, USE_ALSO, PARENT>, SHAPES...> >
 	{
-//		using type=typename finalize_parenthesis<type_sequence<SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, segment<V_TYPE, USAGE_FULL, USE_ALSO, PARENT>, SHAPES...>, PREV_CONT>::type;
+//		using type=typename finalize_parenthesis<type_pack<SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, segment<V_TYPE, USAGE_FULL, USE_ALSO, PARENT>, SHAPES...>, PREV_CONT>::type;
 	};
 
 	template <size_t MAX_CONT, int V_TYPE, size_t USE_ALSO, size_t PARENT, typename ... SRCSHAPES, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES >
-	struct finalize_parenthesis<MAX_CONT, type_sequence<segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >:
-		public finalize_parenthesis<(CONT+1<MAX_CONT?CONT+1:MAX_CONT), type_sequence<SRCSHAPES...>, stuple<SNUM, (CONT+1<MAX_CONT?CONT+1:MAX_CONT), IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...> >
+	struct finalize_parenthesis<MAX_CONT, type_pack<segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >:
+		public finalize_parenthesis<(CONT+1<MAX_CONT?CONT+1:MAX_CONT), type_pack<SRCSHAPES...>, stuple<SNUM, (CONT+1<MAX_CONT?CONT+1:MAX_CONT), IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...> >
 	{
-//		using type=typename finalize_parenthesis<type_sequence<SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...>, true>::type;
+//		using type=typename finalize_parenthesis<type_pack<SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...>, true>::type;
 	};
 
 //	template <size_t MAX_CONT, int V_TYPE, size_t USE_ALSO, size_t PARENT, typename ... SRCSHAPES, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES>
-//	struct finalize_parenthesis<MAX_CONT, type_sequence<segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, true>:
-//		public finalize_parenthesis<MAX_CONT, type_sequence<SRCSHAPES...>, stuple<SNUM, false, LAST_EXISTS, IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...>, true>
+//	struct finalize_parenthesis<MAX_CONT, type_pack<segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SRCSHAPES...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, true>:
+//		public finalize_parenthesis<MAX_CONT, type_pack<SRCSHAPES...>, stuple<SNUM, false, LAST_EXISTS, IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...>, true>
 //	{
-////		using type=typename finalize_parenthesis<type_sequence<SRCSHAPES...>, stuple<SNUM, false, LAST_EXISTS, IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...>, true>::type;
+////		using type=typename finalize_parenthesis<type_pack<SRCSHAPES...>, stuple<SNUM, false, LAST_EXISTS, IS_INDEXED, OST, segment<V_TYPE, USAGE_CONT, USE_ALSO, PARENT>, SHAPES...>, true>::type;
 //	};
 
 	template <size_t MAX_CONT, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES>
-	struct finalize_parenthesis<MAX_CONT, type_sequence<>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >
+	struct finalize_parenthesis<MAX_CONT, type_pack<>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...> >
 	{
 		using type=stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>;
 	};
@@ -597,20 +597,20 @@ namespace tpp
 
 // common
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t GP, typename NEW_SHAPE, typename INUM0, typename ... TNSC, typename ... TINUMS, typename ... NS, typename ... NIN, typename OPOSS, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, typename CREATED_SHAPE, typename NINUM, size_t SNUM, size_t INUM, bool NEED_PARENT, typename OST, typename HEAD, typename SC, typename INDT, typename ... IND>
-	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_sequence<NEW_SHAPE, TNSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, std::tuple<NIN...>, OPOSS, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, SC, INDT, IND...>:
-		public parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP-1, type_sequence<TNSC...>, std::tuple<TINUMS...>, type_sequence<NS...,NEW_SHAPE>, std::tuple<NIN..., INUM0>, OPOSS, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, SC, INDT, IND...>
+	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_pack<NEW_SHAPE, TNSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, std::tuple<NIN...>, OPOSS, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, SC, INDT, IND...>:
+		public parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP-1, type_pack<TNSC...>, std::tuple<TINUMS...>, type_pack<NS...,NEW_SHAPE>, std::tuple<NIN..., INUM0>, OPOSS, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, SC, INDT, IND...>
 	{
-//		using update=typename parenthesis_slave<OPOS, POS, GP-1, type_sequence<TNSC...>, type_sequence<TNIC...>, type_sequence<TPSC...>, std::tuple<TINUMS...>, type_sequence<NS...,NEW_SHAPE>, type_sequence<ITYPE, NI...>, type_sequence<PARENT_SHAPE, NP...>, std::tuple<INUM0, NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>::update;
+//		using update=typename parenthesis_slave<OPOS, POS, GP-1, type_pack<TNSC...>, type_pack<TNIC...>, type_pack<TPSC...>, std::tuple<TINUMS...>, type_pack<NS...,NEW_SHAPE>, type_pack<ITYPE, NI...>, type_pack<PARENT_SHAPE, NP...>, std::tuple<INUM0, NIN...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, CREATED_SHAPE, NINUM>::update;
 	};
 
 // GLUE
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t GP, enum dSU N_USAGE, size_t N_USE_ALSO, typename INUM0, typename ... TNSC, typename ... TINUMS, typename ... NS, typename ... NIN, typename ... IOPOSS, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, enum dSU C_USAGE, typename NINUM, size_t SNUM, size_t INUM, bool NEED_PARENT, typename OST, typename HEAD, typename ... SC, typename INDT, typename ... IND>
-	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_sequence<segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, type_sequence<SC...>, INDT, IND...>:
-		public parenthesis_ind_skip_slave<(sizeof...(SC)<CONT?sizeof...(SC):CONT), USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_sequence<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, N_USE_ALSO, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_sequence<SC...>, INDT, IND...>
+	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_pack<segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, type_pack<SC...>, INDT, IND...>:
+		public parenthesis_ind_skip_slave<(sizeof...(SC)<CONT?sizeof...(SC):CONT), USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_pack<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, N_USE_ALSO, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_pack<SC...>, INDT, IND...>
 	{
-		using base=parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_sequence<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, N_USE_ALSO, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_sequence<SC...>, INDT, IND...>;
-//		using shapes=typename increase_last_usage<USAGE_ENUM, type_sequence<>, type_sequence<NS..., segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...> >::type;
-//		using update=ind_data<shapes,type_sequence<NI..., ITYPE, TNIC...>, type_sequence<NP..., PARENT_SHAPE, TPSC...>, type_sequence<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
+		using base=parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_pack<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, N_USE_ALSO, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_pack<SC...>, INDT, IND...>;
+//		using shapes=typename increase_last_usage<USAGE_ENUM, type_pack<>, type_pack<NS..., segment<I_V_TYPE, N_USAGE, N_USE_ALSO, 0>, TNSC...> >::type;
+//		using update=ind_data<shapes,type_pack<NI..., ITYPE, TNIC...>, type_pack<NP..., PARENT_SHAPE, TPSC...>, type_pack<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
 		inline static void finalize(typename base::type& st, const OST& ost, const INDT& ind)
 		{
 			using created_shape=segment<I_V_TYPE, C_USAGE, 0, 0>;
@@ -624,7 +624,7 @@ namespace tpp
 				throw incompatibleIndices(INUM0::value, INUM, msh.length(), nsh.length());
 //
 //			glue_creator<update::glued,update::slave_created, created_shape, update::glue_point, INUM, update::glue_inum, POS, OPOS,
-//				parenthesis_ind_skip_slave<OPOS+1, update::glued?POS:POS+1, update::glued || update::slave_created?SNUM:SNUM+1, INUM+1, NEED_PARENT || update::need_parent, typename update::nsc, typename update::nic, typename update::psc, typename update::inums, OST, type_sequence<SHAPES...>, INDT, IND...>,
+//				parenthesis_ind_skip_slave<OPOS+1, update::glued?POS:POS+1, update::glued || update::slave_created?SNUM:SNUM+1, INUM+1, NEED_PARENT || update::need_parent, typename update::nsc, typename update::nic, typename update::psc, typename update::inums, OST, type_pack<SHAPES...>, INDT, IND...>,
 //				OST, ITYPE, HEAD, INDT, IND...>::finalize(st,ost,ind);
 			base::finalize(st, ost, ind);
 		}
@@ -632,12 +632,12 @@ namespace tpp
 
 // GLUE && SLAVE
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t GP, enum dSU N_USAGE, typename INUM0, typename ... TNSC, typename ... TINUMS, typename ... NS, typename ... NIN, typename ... IOPOSS, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, enum dSU C_USAGE, typename NINUM, size_t SNUM, size_t INUM, bool NEED_PARENT, typename OST, typename HEAD, typename ... SC, typename INDT, typename ... IND>
-	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_sequence<segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, type_sequence<SC...>, INDT, IND...>:
-		public parenthesis_ind_skip_slave<(sizeof...(SC)<CONT?sizeof...(SC):CONT), USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_sequence<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, 0, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_sequence<SC...>, INDT, IND...>
+	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_pack<segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, segment<I_V_TYPE, C_USAGE, 0, 0>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, type_pack<SC...>, INDT, IND...>:
+		public parenthesis_ind_skip_slave<(sizeof...(SC)<CONT?sizeof...(SC):CONT), USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_pack<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, 0, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_pack<SC...>, INDT, IND...>
 	{
-		using base=parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_sequence<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, 0, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_sequence<SC...>, INDT, IND...>;
-//		using shapes=typename increase_last_usage<USAGE_ENUM, type_sequence<>, type_sequence<NS..., segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...> >::type;
-//		using update=ind_data<shapes,type_sequence<NI..., ITYPE, TNIC...>, type_sequence<NP..., PARENT_SHAPE, TPSC...>, type_sequence<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
+		using base=parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_pack<NS..., segment<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, 0, 0>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS...>, std::tuple<IOPOSS...>, OST, type_pack<SC...>, INDT, IND...>;
+//		using shapes=typename increase_last_usage<USAGE_ENUM, type_pack<>, type_pack<NS..., segment<I_V_TYPE, N_USAGE, 0, 0>, TNSC...> >::type;
+//		using update=ind_data<shapes,type_pack<NI..., ITYPE, TNIC...>, type_pack<NP..., PARENT_SHAPE, TPSC...>, type_pack<NIN..., INUM0, TINUMS...>, true, false, false, true, GP, INUM0::value, false>;
 		inline static void finalize(typename base::type& st, const OST& ost, const INDT& ind)
 		{
 			using created_shape=segment<I_V_TYPE, C_USAGE, 0, 0>;
@@ -651,7 +651,7 @@ namespace tpp
 				throw incompatibleIndices(INUM0::value, INUM, I_V_TYPE, msh.length(), nsh.length());
 //
 //			glue_creator<update::glued,update::slave_created, created_shape, update::glue_point, INUM, update::glue_inum, POS, OPOS,
-//				parenthesis_ind_skip_slave<OPOS+1, update::glued?POS:POS+1, update::glued || update::slave_created?SNUM:SNUM+1, INUM+1, NEED_PARENT || update::need_parent, typename update::nsc, typename update::nic, typename update::psc, typename update::inums, OST, type_sequence<SHAPES...>, INDT, IND...>,
+//				parenthesis_ind_skip_slave<OPOS+1, update::glued?POS:POS+1, update::glued || update::slave_created?SNUM:SNUM+1, INUM+1, NEED_PARENT || update::need_parent, typename update::nsc, typename update::nic, typename update::psc, typename update::inums, OST, type_pack<SHAPES...>, INDT, IND...>,
 //				OST, ITYPE, HEAD, INDT, IND...>::finalize(st,ost,ind);
 			base::finalize(st, ost, ind);
 		}
@@ -660,13 +660,13 @@ namespace tpp
 
 // SLAVE
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t GP, template <int, enum dSU, size_t, size_t> class csClass, enum dSU N_USAGE, size_t N_PARENT, typename INUM0, typename ... TNSC, typename ... TINUMS, typename ... NS, typename ... NIN, typename ... IOPOSS, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, template <int, enum dSU, size_t, size_t> class crsClass, enum dSU C_USAGE, size_t C_PARENT, typename NINUM, size_t SNUM, size_t INUM, bool NEED_PARENT, typename OST, typename HEAD, typename ... SC, typename INDT, typename ... IND>
-	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_sequence<csClass<I_V_TYPE, N_USAGE, 0, N_PARENT>, TNSC...>, std::tuple<INUM0,TINUMS...>, type_sequence<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, crsClass<I_V_TYPE, C_USAGE, 0, C_PARENT>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, type_sequence<SC...>, INDT, IND...>:
-		public parenthesis_ind_skip_slave<(sizeof...(SC)<CONT?sizeof...(SC):CONT), USAGE_CONT, OPOS+1, POS+1, SNUM, INUM+1, NEED_PARENT || C_PARENT?true:false, type_sequence<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT>, NS..., csClass<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, POS, N_PARENT>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, type_sequence<SC...>, INDT, IND...>
+	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_pack<csClass<I_V_TYPE, N_USAGE, 0, N_PARENT>, TNSC...>, std::tuple<INUM0,TINUMS...>, type_pack<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, crsClass<I_V_TYPE, C_USAGE, 0, C_PARENT>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, type_pack<SC...>, INDT, IND...>:
+		public parenthesis_ind_skip_slave<(sizeof...(SC)<CONT?sizeof...(SC):CONT), USAGE_CONT, OPOS+1, POS+1, SNUM, INUM+1, NEED_PARENT || C_PARENT?true:false, type_pack<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT>, NS..., csClass<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, POS, N_PARENT>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, type_pack<SC...>, INDT, IND...>
 	{
-		using base=parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS+1, SNUM, INUM+1, NEED_PARENT || C_PARENT?true:false, type_sequence<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT>, NS..., csClass<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, POS, N_PARENT>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, type_sequence<SC...>, INDT, IND...>;
-//		using shapes=typename increase_last_usage<USAGE_ENUM, type_sequence<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT> >, type_sequence<NS..., csClass<I_V_TYPE, N_USAGE, POS, N_PARENT>, TNSC...> >::type;
-//		using update=ind_data<shapes,type_sequence<NI..., ITYPE, TNIC...,iClass<I_V_TYPE> >, type_sequence<NP..., PARENT_SHAPE, TPSC...,sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT> >,
-//				type_sequence<NIN..., INUM0, TINUMS..., NINUM>, false, false, true, false, GP, INUM0::value, C_PARENT?true:false>;
+		using base=parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS+1, SNUM, INUM+1, NEED_PARENT || C_PARENT?true:false, type_pack<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT>, NS..., csClass<I_V_TYPE, (N_USAGE<USAGE_ENUM)?USAGE_ENUM:N_USAGE, POS, N_PARENT>, TNSC...>, std::tuple<NIN..., INUM0, TINUMS..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, type_pack<SC...>, INDT, IND...>;
+//		using shapes=typename increase_last_usage<USAGE_ENUM, type_pack<crsClass<I_V_TYPE, USAGE_SLAVE, 0, C_PARENT> >, type_pack<NS..., csClass<I_V_TYPE, N_USAGE, POS, N_PARENT>, TNSC...> >::type;
+//		using update=ind_data<shapes,type_pack<NI..., ITYPE, TNIC...,iClass<I_V_TYPE> >, type_pack<NP..., PARENT_SHAPE, TPSC...,sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT> >,
+//				type_pack<NIN..., INUM0, TINUMS..., NINUM>, false, false, true, false, GP, INUM0::value, C_PARENT?true:false>;
 		inline static void finalize(typename base::type& st, const OST& ost, const INDT& ind)
 		{
 			const HEAD& h=get<OPOS>(ost);
@@ -679,7 +679,7 @@ namespace tpp
 				throw incompatibleIndices(INUM0::value, INUM, I_V_TYPE, msh.length(), nsh.length());
 //
 //			glue_creator<update::glued,update::slave_created, created_shape, update::glue_point, INUM, update::glue_inum, POS, OPOS,
-//				parenthesis_ind_skip_slave<OPOS+1, update::glued?POS:POS+1, update::glued || update::slave_created?SNUM:SNUM+1, INUM+1, NEED_PARENT || update::need_parent, typename update::nsc, typename update::nic, typename update::psc, typename update::inums, OST, type_sequence<SHAPES...>, INDT, IND...>,
+//				parenthesis_ind_skip_slave<OPOS+1, update::glued?POS:POS+1, update::glued || update::slave_created?SNUM:SNUM+1, INUM+1, NEED_PARENT || update::need_parent, typename update::nsc, typename update::nic, typename update::psc, typename update::inums, OST, type_pack<SHAPES...>, INDT, IND...>,
 //				OST, ITYPE, HEAD, INDT, IND...>::finalize(st,ost,ind);
 			base::finalize(st, ost, ind);
 		}
@@ -687,10 +687,10 @@ namespace tpp
 
 // last
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t GP, typename ... NS, typename ... NIN, typename ... IOPOSS, template <int, enum dSU, size_t, size_t> class sClass, int O_V_TYPE, enum dSU O_USAGE, size_t O_USE_ALSO, size_t O_PARENT, template <int> class iClass, int I_V_TYPE, template <int, enum dSU, size_t, size_t> class crsClass, enum dSU C_USAGE, size_t C_PARENT, typename NINUM, size_t SNUM, size_t INUM, bool NEED_PARENT, typename OST, typename HEAD, typename SC, typename INDT, typename ... IND>
-	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_sequence<>, std::tuple<>, type_sequence<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, crsClass<I_V_TYPE, C_USAGE, 0, C_PARENT>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, SC, INDT, IND...>:
-		public parenthesis_ind_skip_slave<CONT, USAGE_FULL, OPOS+1, POS+1, SNUM+1, INUM+1, (NEED_PARENT || C_PARENT>0), type_sequence<crsClass<I_V_TYPE, (MIN_USAGE<C_USAGE)?C_USAGE:MIN_USAGE, 0, C_PARENT>, NS...>, std::tuple<NIN..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, SC, INDT, IND...>
+	struct parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, GP, type_pack<>, std::tuple<>, type_pack<NS...>, std::tuple<NIN...>, std::tuple<IOPOSS...>, sClass<O_V_TYPE, O_USAGE, O_USE_ALSO, O_PARENT>, iClass<I_V_TYPE>, crsClass<I_V_TYPE, C_USAGE, 0, C_PARENT>, NINUM, SNUM, INUM, NEED_PARENT, OST, HEAD, SC, INDT, IND...>:
+		public parenthesis_ind_skip_slave<CONT, USAGE_FULL, OPOS+1, POS+1, SNUM+1, INUM+1, (NEED_PARENT || C_PARENT>0), type_pack<crsClass<I_V_TYPE, (MIN_USAGE<C_USAGE)?C_USAGE:MIN_USAGE, 0, C_PARENT>, NS...>, std::tuple<NIN..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, SC, INDT, IND...>
 	{
-		using base=parenthesis_ind_skip_slave<CONT, USAGE_FULL, OPOS+1, POS+1, SNUM+1, INUM+1, (NEED_PARENT || C_PARENT>0), type_sequence<crsClass<I_V_TYPE, (MIN_USAGE<C_USAGE)?C_USAGE:MIN_USAGE, 0, C_PARENT>, NS...>, std::tuple<NIN..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, SC, INDT, IND...>;
+		using base=parenthesis_ind_skip_slave<CONT, USAGE_FULL, OPOS+1, POS+1, SNUM+1, INUM+1, (NEED_PARENT || C_PARENT>0), type_pack<crsClass<I_V_TYPE, (MIN_USAGE<C_USAGE)?C_USAGE:MIN_USAGE, 0, C_PARENT>, NS...>, std::tuple<NIN..., NINUM>, std::tuple<IOPOSS...,typename std::integral_constant<size_t,OPOS>::type>, OST, SC, INDT, IND...>;
 		inline static void finalize(typename base::type& st, const OST& ost, const INDT& ind)
 		{
 			const HEAD& h=get<OPOS>(ost);
@@ -705,38 +705,38 @@ namespace tpp
 	struct parenthesis_ind;
 
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t SNUM, size_t INUM, bool NEED_PARENT, typename NSC, typename INUMS, typename OPOSS, typename OST, typename ... SHAPES, typename INDT, typename ... IND>
-	struct parenthesis_ind_skip_slave<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_sequence<SHAPES...>, INDT, IND...>:
-		public parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_sequence<SHAPES...>, INDT, IND...>
+	struct parenthesis_ind_skip_slave<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_pack<SHAPES...>, INDT, IND...>:
+		public parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_pack<SHAPES...>, INDT, IND...>
 	{
 //		static void tst_func(typename std::integral_constant<size_t, POS>::type) {}
 	};
 
 // USAGE_SLAVE
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t SNUM, size_t INUM, bool NEED_PARENT, typename NSC, typename INUMS, typename OPOSS, typename OST, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES, typename INDT, typename ... IND>
-	struct parenthesis_ind_skip_slave<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_sequence<sClass<V_TYPE, USAGE_SLAVE, USE_ALSO, PARENT>, SHAPES...>, INDT, IND...>:
-//		public parenthesis_ind_skip_slave<CONT, MIN_USAGE, OPOS+1, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_sequence<SHAPES...>, INDT, IND...>
-		public parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_sequence<SHAPES...>, INDT, IND...>
+	struct parenthesis_ind_skip_slave<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_pack<sClass<V_TYPE, USAGE_SLAVE, USE_ALSO, PARENT>, SHAPES...>, INDT, IND...>:
+//		public parenthesis_ind_skip_slave<CONT, MIN_USAGE, OPOS+1, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_pack<SHAPES...>, INDT, IND...>
+		public parenthesis_ind_skip_slave<CONT, USAGE_CONT, OPOS+1, POS, SNUM, INUM, NEED_PARENT, NSC, INUMS, OPOSS, OST, type_pack<SHAPES...>, INDT, IND...>
 	{
 	};
 
 
 // Index is not size_t and old shape is not USAGE_SLAVE
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t SNUM, size_t INUM, bool NEED_PARENT, typename ... NS, typename INUMS, typename OPOSS, typename OST, typename HEAD, typename ... SHAPES, typename INDT, template <int> class iClass, int I_V_TYPE, typename ... IND>
-	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, type_sequence<NS...>, INUMS, OPOSS, OST, type_sequence<HEAD, SHAPES...>, INDT, iClass<I_V_TYPE>, IND...>:
-		public parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, POS-1, type_sequence<NS...>, INUMS, type_sequence<>, std::tuple<>, OPOSS, HEAD, iClass<I_V_TYPE>, typename iClass<I_V_TYPE>::template applyer<HEAD, OPOS>::new_shape, typename std::integral_constant<size_t, INUM>::type, SNUM, INUM, NEED_PARENT, OST, HEAD, type_sequence<SHAPES...>, INDT, IND...>
+	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, type_pack<NS...>, INUMS, OPOSS, OST, type_pack<HEAD, SHAPES...>, INDT, iClass<I_V_TYPE>, IND...>:
+		public parenthesis_slave<CONT, MIN_USAGE, OPOS, POS, POS-1, type_pack<NS...>, INUMS, type_pack<>, std::tuple<>, OPOSS, HEAD, iClass<I_V_TYPE>, typename iClass<I_V_TYPE>::template applyer<HEAD, OPOS>::new_shape, typename std::integral_constant<size_t, INUM>::type, SNUM, INUM, NEED_PARENT, OST, HEAD, type_pack<SHAPES...>, INDT, IND...>
 	{
 	};
 
 // numeric index
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t SNUM, size_t INUM, bool NEED_PARENT, typename ... NS, typename INUMS, typename OPOSS, typename OST, typename HEAD, typename ... SHAPES, typename INDT, typename NITYPE, typename ... IND>
-	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, type_sequence<NS...>, INUMS, OPOSS, OST, type_sequence<HEAD, SHAPES...>, INDT, NITYPE, IND...>:
-		public parenthesis_ind_skip_slave<(sizeof...(SHAPES)<CONT?sizeof...(SHAPES):CONT), USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_sequence<NS...>, INUMS, OPOSS, OST, type_sequence<SHAPES...>, INDT, IND...>
+	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, NEED_PARENT, type_pack<NS...>, INUMS, OPOSS, OST, type_pack<HEAD, SHAPES...>, INDT, NITYPE, IND...>:
+		public parenthesis_ind_skip_slave<(sizeof...(SHAPES)<CONT?sizeof...(SHAPES):CONT), USAGE_CONT, OPOS+1, POS, SNUM, INUM+1, NEED_PARENT, type_pack<NS...>, INUMS, OPOSS, OST, type_pack<SHAPES...>, INDT, IND...>
 	{
 	};
 
 // No more indices need_parent, rest of old shapes
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t SNUM, size_t INUM, typename NSC, typename INUMS, typename OPOSS, typename OST, typename ... SHAPES, typename INDT>
-	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, true, NSC, INUMS, OPOSS, OST, type_sequence<SHAPES...>, INDT>:
+	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, true, NSC, INUMS, OPOSS, OST, type_pack<SHAPES...>, INDT>:
 		public finalize_parenthesis<CONT, NSC, stuple<SNUM, 0, true, OST> >
 	{
 		inline static void finalize(typename finalize_parenthesis<CONT, NSC, stuple<SNUM, 0, true, OST> >::type& st, const OST& ost, const INDT& ind) {}
@@ -754,7 +754,7 @@ namespace tpp
 
 // No more indices need_parent==false, rest of old shapes
 	template <size_t CONT, enum dSU MIN_USAGE, size_t OPOS, size_t POS, size_t SNUM, size_t INUM, typename NSC, typename INUMS, typename OPOSS, typename OST, typename ... SHAPES, typename INDT>
-	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, false, NSC, INUMS, OPOSS, OST, type_sequence<SHAPES...>, INDT>:
+	struct parenthesis_ind<CONT, MIN_USAGE, OPOS, POS, SNUM, INUM, false, NSC, INUMS, OPOSS, OST, type_pack<SHAPES...>, INDT>:
 		public finalize_parenthesis<CONT, NSC, stuple<SNUM, 0, true, void> >
 	{
 		inline static void finalize(typename finalize_parenthesis<CONT, NSC, stuple<SNUM, 0, true, void> >::type& st, const OST& ost, const INDT& ind) {}
@@ -775,8 +775,8 @@ namespace tpp
 	struct parenthesis_special;
 // default index
 	template <size_t POS, size_t OPOS, typename INDT, typename ST, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES, typename ... NSHAPES, int I_V_TYPE, typename ... IND>
-	struct parenthesis_special<POS, OPOS, INDT, ST, type_sequence<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>, type_sequence<NSHAPES...>, defaultIndex<I_V_TYPE>, IND...>:
-		public parenthesis_special<POS+1, OPOS+1, INDT, ST, type_sequence<SHAPES...>, type_sequence<NSHAPES..., sClass<I_V_TYPE, USAGE, USE_ALSO, PARENT> >, IND...>
+	struct parenthesis_special<POS, OPOS, INDT, ST, type_pack<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>, type_pack<NSHAPES...>, defaultIndex<I_V_TYPE>, IND...>:
+		public parenthesis_special<POS+1, OPOS+1, INDT, ST, type_pack<SHAPES...>, type_pack<NSHAPES..., sClass<I_V_TYPE, USAGE, USE_ALSO, PARENT> >, IND...>
 	{
 		inline static constexpr const defaultIndex<I_V_TYPE>& index(const ST& ost, const INDT& ind, typename std::integral_constant<size_t, POS>::type) noexcept
 		{
@@ -789,7 +789,7 @@ namespace tpp
 	};
 // no more indices
 	template <size_t POS, size_t OPOS, typename INDT, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES, typename ... NSHAPES>
-	struct parenthesis_special<POS, OPOS, INDT, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<>, type_sequence<NSHAPES...> >
+	struct parenthesis_special<POS, OPOS, INDT, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_pack<>, type_pack<NSHAPES...> >
 	{
 		using type=stuple<SNUM, CONT, true, OST, NSHAPES...>;
 		inline static void finalize(type& st, const stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>& ost, const INDT& ind) {}
@@ -800,14 +800,14 @@ namespace tpp
 
 	template <size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES, typename ... IND>
 	struct parenthesis_chk_normal<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, false, IND...>:
-		public parenthesis_ind_skip_slave<CONT, USAGE_FULL, 0, 0, 0, 0, false, type_sequence<>, std::tuple<>, std::tuple<>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<SHAPES...>, std::tuple<IND...>, IND...>
+		public parenthesis_ind_skip_slave<CONT, USAGE_FULL, 0, 0, 0, 0, false, type_pack<>, std::tuple<>, std::tuple<>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_pack<SHAPES...>, std::tuple<IND...>, IND...>
 	{
 		static const bool defaultIndices=false;
 	};
 // special case
 	template <size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES, typename ... IND>
 	struct parenthesis_chk_normal<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, true, IND...>:
-		public parenthesis_special<0, 0, std::tuple<IND...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<SHAPES...>, type_sequence<>, IND...>
+		public parenthesis_special<0, 0, std::tuple<IND...>, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_pack<SHAPES...>, type_pack<>, IND...>
 	{
 		static const bool defaultIndices=true;
 	};
@@ -1051,29 +1051,29 @@ namespace tpp
 	{
 	};
 	template <typename T, typename OT, typename INDT, size_t POS, size_t INUM, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, size_t USE_ALSO, size_t PARENT, typename ... RSHAPES, typename ... IND>
-	struct index_shift_applyer_base_skip_slave<T, OT, INDT, POS, INUM, type_sequence<sClass<V_TYPE, USAGE_SLAVE, USE_ALSO, PARENT>, RSHAPES...>, IND...>:
-		public index_shift_applyer_base_skip_slave<T, OT, INDT, POS+1, INUM, type_sequence<RSHAPES...>, IND...>
+	struct index_shift_applyer_base_skip_slave<T, OT, INDT, POS, INUM, type_pack<sClass<V_TYPE, USAGE_SLAVE, USE_ALSO, PARENT>, RSHAPES...>, IND...>:
+		public index_shift_applyer_base_skip_slave<T, OT, INDT, POS+1, INUM, type_pack<RSHAPES...>, IND...>
 	{
 	};
 
 // NORMAL
 	template <typename T, typename OT, typename INDT, size_t POS, size_t INUM, typename HEAD, typename ... RSHAPES, template <int> class iClass, int I_V_TYPE, typename ... IND>
-	struct index_shift_applyer_base<T, OT, INDT, POS, INUM, type_sequence<HEAD, RSHAPES...>, iClass<I_V_TYPE>, IND...>
+	struct index_shift_applyer_base<T, OT, INDT, POS, INUM, type_pack<HEAD, RSHAPES...>, iClass<I_V_TYPE>, IND...>
 	{
 		inline static void shift_data(const OT& ot, T *& p, const INDT& ind)
 		{
 			shapes_caller<T,POS,OT>::apply_numeric_index(ot,p,std::get<INUM>(ind).first());
-			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_sequence<RSHAPES...>,IND...>::shift_data(ot,p,ind);
+			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_pack<RSHAPES...>,IND...>::shift_data(ot,p,ind);
 		}
 		inline static void shift_data(OT& ot, T *& p, const INDT& ind)
 		{
 			shapes_caller<T,POS,OT>::apply_numeric_index(ot,p,std::get<INUM>(ind).first());
-			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_sequence<RSHAPES...>,IND...>::shift_data(ot,p,ind);
+			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_pack<RSHAPES...>,IND...>::shift_data(ot,p,ind);
 		}
 	};
 // numeric index
 	template <typename T, typename OT, typename INDT, size_t POS, size_t INUM, typename HEAD, typename ... RSHAPES, typename NITYPE, typename ... IND>
-	struct index_shift_applyer_base<T, OT, INDT, POS, INUM, type_sequence<HEAD, RSHAPES...>, NITYPE, IND...>
+	struct index_shift_applyer_base<T, OT, INDT, POS, INUM, type_pack<HEAD, RSHAPES...>, NITYPE, IND...>
 	{
 		inline static void shift_data(const OT& ot, T *& p, const INDT& ind)
 		{
@@ -1082,7 +1082,7 @@ namespace tpp
 			if (v>=h.length())
 				throw outOfBounds(v,INUM,h.length());
 			shapes_caller<T,POS,OT>::apply_numeric_index(ot,p,v);
-			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_sequence<RSHAPES...>,IND...>::shift_data(ot,p,ind);
+			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_pack<RSHAPES...>,IND...>::shift_data(ot,p,ind);
 		}
 		inline static void shift_data(OT& ot, T *& p, const INDT& ind)
 		{
@@ -1091,7 +1091,7 @@ namespace tpp
 			if (v>=h.length())
 				throw outOfBounds(v,INUM,h.length());
 			shapes_caller<T,POS,OT>::apply_numeric_index(ot,p,v);
-			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_sequence<RSHAPES...>,IND...>::shift_data(ot,p,ind);
+			index_shift_applyer_base_skip_slave<T, OT,INDT,POS+1,INUM+1,type_pack<RSHAPES...>,IND...>::shift_data(ot,p,ind);
 		}
 	};
 
@@ -1137,13 +1137,13 @@ namespace tpp
 	struct CORRECT_USE_ALSO;
 
 	template <size_t SNUM, size_t CONT, typename ... CNSC, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... NSC, typename OST, typename NPOS>
-	struct CORRECT_USE_ALSO<SNUM, CONT, type_sequence<CNSC...>, type_sequence<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, NSC...>, OST, NPOS>:
-		public CORRECT_USE_ALSO<(USAGE==USAGE_SLAVE?SNUM:SNUM+1), CONT, type_sequence<sClass<V_TYPE, USAGE, sseq_element<USE_ALSO, NPOS>::value, PARENT>, CNSC...>, type_sequence<NSC...>, OST, NPOS>
+	struct CORRECT_USE_ALSO<SNUM, CONT, type_pack<CNSC...>, type_pack<sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, NSC...>, OST, NPOS>:
+		public CORRECT_USE_ALSO<(USAGE==USAGE_SLAVE?SNUM:SNUM+1), CONT, type_pack<sClass<V_TYPE, USAGE, get<size_t, USE_ALSO>(NPOS()), PARENT>, CNSC...>, type_pack<NSC...>, OST, NPOS>
 	{
 	};
 
 	template <size_t SNUM, size_t CONT, typename CNSC, typename OST, typename NPOS>
-	struct CORRECT_USE_ALSO<SNUM, CONT, CNSC, type_sequence<>, OST, NPOS>:
+	struct CORRECT_USE_ALSO<SNUM, CONT, CNSC, type_pack<>, OST, NPOS>:
 		public finalize_parenthesis<CONT, CNSC, stuple<SNUM, 0, true, OST> >
 	{
 	};
@@ -1155,14 +1155,14 @@ namespace tpp
 	struct valence_remover_process;
 
 	template <typename ST, typename ... NSC, size_t CPOS, size_t INUM, size_t... NPOS, size_t ... POS, size_t CONT, typename OST, int ... VN, bool PREV_REMOVED, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct valence_remover_process<ST, type_sequence<NSC...>, CPOS, INUM, size_t_sequence<NPOS...>, size_t_sequence<POS...>, CONT, OST, int_sequence<VN...>, PREV_REMOVED, true, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
-		public valence_remover_base<ST, type_sequence<NSC...>, CPOS+1, INUM+1, size_t_sequence<NPOS..., 0>, size_t_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, int_sequence<VN...>, true, SHAPES...>
+	struct valence_remover_process<ST, type_pack<NSC...>, CPOS, INUM, std::index_sequence<NPOS...>, std::index_sequence<POS...>, CONT, OST, std::integer_sequence<int, VN...>, PREV_REMOVED, true, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
+		public valence_remover_base<ST, type_pack<NSC...>, CPOS+1, INUM+1, std::index_sequence<NPOS..., 0>, std::index_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, std::integer_sequence<int, VN...>, true, SHAPES...>
 	{
-		typedef valence_remover_base<ST, type_sequence<NSC...>, CPOS+1, INUM+1, size_t_sequence<NPOS..., 0>, size_t_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, int_sequence<VN...>, true, SHAPES...> base;
+		typedef valence_remover_base<ST, type_pack<NSC...>, CPOS+1, INUM+1, std::index_sequence<NPOS..., 0>, std::index_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, std::integer_sequence<int, VN...>, true, SHAPES...> base;
 		template <typename T>
 		static void apply_numeric_index(ST& st, T *&p, const size_t *o)
 		{
-			static size_t inum=find_int<0, V_TYPE, VN...>::pos;
+			static size_t inum=find<int, V_TYPE>(std::integer_sequence<int, VN...>());
 			if (o[inum]>=get<CPOS>(st).length())
 				throw outOfBounds(o[inum], sizeof...(POS), get<CPOS>(st).length());
 			shapes_caller<T, CPOS, ST>::apply_numeric_index(st, p, o[inum]);
@@ -1170,43 +1170,43 @@ namespace tpp
 		}
 	};
 	template <typename ST, typename ... NSC, size_t CPOS, size_t INUM, size_t... NPOS, size_t ... POS, size_t CONT, typename OST, int ... VN, bool PREV_REMOVED, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct valence_remover_process<ST, type_sequence<NSC...>, CPOS, INUM, size_t_sequence<NPOS...>, size_t_sequence<POS...>, CONT, OST, int_sequence<VN...>, PREV_REMOVED, false, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
-		public valence_remover_base<ST, type_sequence<NSC..., sClass<V_TYPE, (PREV_REMOVED && USAGE==USAGE_FULL?USAGE_CONT:USAGE), USE_ALSO, PARENT> >, CPOS+1, INUM, size_t_sequence<NPOS..., sizeof...(NSC)>, size_t_sequence<POS..., CPOS>, CONT, OST, int_sequence<VN...>, false, SHAPES...>
+	struct valence_remover_process<ST, type_pack<NSC...>, CPOS, INUM, std::index_sequence<NPOS...>, std::index_sequence<POS...>, CONT, OST, std::integer_sequence<int, VN...>, PREV_REMOVED, false, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
+		public valence_remover_base<ST, type_pack<NSC..., sClass<V_TYPE, (PREV_REMOVED && USAGE==USAGE_FULL?USAGE_CONT:USAGE), USE_ALSO, PARENT> >, CPOS+1, INUM, std::index_sequence<NPOS..., sizeof...(NSC)>, std::index_sequence<POS..., CPOS>, CONT, OST, std::integer_sequence<int, VN...>, false, SHAPES...>
 	{
 	};
 
 	template <typename ST, typename NSC, size_t CPOS, size_t INUM, typename NPOS, typename POS, size_t CONT, typename OST, int ... VN, bool PREV_REMOVED, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct valence_remover_base<ST, NSC, CPOS, INUM, NPOS, POS, CONT, OST, int_sequence<VN...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
-		public valence_remover_process<ST, NSC, CPOS, INUM, NPOS, POS, CONT, OST, int_sequence<VN...>, PREV_REMOVED, find_int<0, V_TYPE, VN...>::found && USAGE!=USAGE_SLAVE, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>
+	struct valence_remover_base<ST, NSC, CPOS, INUM, NPOS, POS, CONT, OST, std::integer_sequence<int, VN...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
+		public valence_remover_process<ST, NSC, CPOS, INUM, NPOS, POS, CONT, OST, std::integer_sequence<int, VN...>, PREV_REMOVED, find<int, V_TYPE>(std::integer_sequence<int, VN...>())<sizeof...(VN) && USAGE!=USAGE_SLAVE, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>
 	{
 	};
 
 	template <typename ST, typename ... NSC, size_t CPOS, size_t INUM, size_t ... NPOS, size_t ... POS, size_t CONT, typename OST, int ... VN, bool PREV_REMOVED>
-	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, size_t_sequence<NPOS...>, size_t_sequence<POS...>, CONT, OST, int_sequence<VN...>, PREV_REMOVED>:
-		public CORRECT_USE_ALSO<0, CONT, type_sequence<>, type_sequence<NSC...>, OST, size_t_sequence<NPOS...> >
+	struct valence_remover_base<ST, type_pack<NSC...>, CPOS, INUM, std::index_sequence<NPOS...>, std::index_sequence<POS...>, CONT, OST, std::integer_sequence<int, VN...>, PREV_REMOVED>:
+		public CORRECT_USE_ALSO<0, CONT, type_pack<>, type_pack<NSC...>, OST, std::index_sequence<NPOS...> >
 	{
 		static_assert(INUM==sizeof...(VN), "Cannot remove incorrect valence");
 		template <typename T>
 		static void apply_numeric_index(ST& st, T *&p, const size_t *o) noexcept {}
 		template <size_t I>
-		inline static constexpr const typename ST::template element_type<sseq_element<I,size_t_sequence<POS...> >::value>& shape(const ST& st) noexcept
+		inline static constexpr const typename ST::template element_type<get<size_t, I>(std::index_sequence<POS...>())>& shape(const ST& st) noexcept
 		{
-			return get<sseq_element<I,size_t_sequence<POS...> >::value>(st);
+			return get<get<size_t, I>(std::index_sequence<POS...>())>(st);
 		}
 	};
 
 	template <size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES, int ... V_TYPE>
 	struct valence_remover<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, V_TYPE...>:
-		public valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<>, 0, 0, size_t_sequence<>, size_t_sequence<>, CONT, OST, int_sequence<V_TYPE...>, false, SHAPES...>
+		public valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_pack<>, 0, 0, std::index_sequence<>, std::index_sequence<>, CONT, OST, std::integer_sequence<int, V_TYPE...>, false, SHAPES...>
 	{
-		static_assert(is_unique_int<V_TYPE...>::value,"Valences must be unique");
-		typedef valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<>, 0, 0, size_t_sequence<>, size_t_sequence<>, CONT, OST, int_sequence<V_TYPE...>, false, SHAPES...> base;
+		static_assert(is_unique(std::integer_sequence<int, V_TYPE...>()),"Valences must be unique");
+		typedef valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_pack<>, 0, 0, std::index_sequence<>, std::index_sequence<>, CONT, OST, std::integer_sequence<int, V_TYPE...>, false, SHAPES...> base;
 		template <typename T>
 		static void apply_numeric_index(stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>& st, T *&p, size_t (&o)[sizeof...(V_TYPE)])
 		{
 			base::apply_numeric_index(st,p,o);
 		}
-		static typename base::type create_stuple(const stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>&st) { return typename base::type(st, int_sequence<V_TYPE...>()); }
+		static typename base::type create_stuple(const stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>&st) { return typename base::type(st, std::integer_sequence<int, V_TYPE...>()); }
 	};
 
 };

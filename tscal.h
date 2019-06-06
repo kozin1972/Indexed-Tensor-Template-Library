@@ -68,8 +68,8 @@ namespace tpp
 	};
 
 	template <typename T, typename STR, typename SI, typename HEAD, typename ... SPREAD, typename BASE_LOOP>
-	struct scal_create_general_loop<T, STR, SI, type_sequence<HEAD, SPREAD...>, BASE_LOOP>:
-		public scal_create_general_loop<T, STR, SI, type_sequence<SPREAD...>, scal_spread_loop<T, STR, SI, typename iterator_getter_by_src_v_type<STR, SI, 0, HEAD::v_type>::template iterator_type<T>, BASE_LOOP> >
+	struct scal_create_general_loop<T, STR, SI, type_pack<HEAD, SPREAD...>, BASE_LOOP>:
+		public scal_create_general_loop<T, STR, SI, type_pack<SPREAD...>, scal_spread_loop<T, STR, SI, typename iterator_getter_by_src_v_type<STR, SI, 0, HEAD::v_type>::template iterator_type<T>, BASE_LOOP> >
 	{
 	};
 
@@ -108,22 +108,22 @@ namespace tpp
 	struct scal_insert_mask;
 
 	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, int H_V_TYPE, int H_MASK, int H_C_MASK, int H_V_MASK, bool H_IS_JOINABLE, int H_JOIN_WITH, size_t H_ORDER, typename ... VI, typename ... RES>
-	struct scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>, type_sequence<RES...> >:
+	struct scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>, type_pack<RES...> >:
 		public std::conditional<
 			(MASK==V_MASK && H_MASK!=H_V_MASK)?true:
 				(MASK!=V_MASK && H_MASK==H_V_MASK)?false:
 					(C_MASK > H_C_MASK)?true:
 						(C_MASK < H_C_MASK)?false:
 							(ORDER<H_ORDER),
-			type_sequence<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>,
-			scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<VI...>, type_sequence<RES..., valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER> > >
+			type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>,
+			scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<VI...>, type_pack<RES..., valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER> > >
 		>::type
 	{
 	};
 
 	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... RES>
-	struct scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<>, type_sequence<RES...> >:
-		public type_sequence<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER> >
+	struct scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<>, type_pack<RES...> >:
+		public type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER> >
 	{
 	};
 
@@ -132,26 +132,26 @@ namespace tpp
 
 //  SPREAD
 	template <typename T, typename STR, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, bool R_CONT, bool A_CONT>
-	struct scal_by_mask<T, STR, type_sequence<type_sequence<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_sequence<SPREAD...>, R_CONT, A_CONT>:
-		public scal_by_mask<T, STR, type_sequence<type_sequence<VI...>, SI>, typename scal_insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<SPREAD...>, type_sequence<> >::type, R_CONT, A_CONT>
+	struct scal_by_mask<T, STR, type_pack<type_pack<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, R_CONT, A_CONT>:
+		public scal_by_mask<T, STR, type_pack<type_pack<VI...>, SI>, typename scal_insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SPREAD...>, type_pack<> >::type, R_CONT, A_CONT>
 	{
 	};
 //	DONE VECTOR
 	template <typename T, typename STR, typename SI, typename ... SPREAD, int V_TYPE, int C_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, bool R_CONT, bool A_CONT>
-	struct scal_by_mask<T, STR, type_sequence<type_sequence<>, SI>, type_sequence<valence_info<V_TYPE, 1, C_MASK, 1, IS_JOINABLE, JOIN_WITH, ORDER>, SPREAD...>, R_CONT, A_CONT>:
-		public scal_create_general_loop<T, STR, SI, type_sequence<SPREAD...>, scal_loop<T, STR, SI, valence_info<V_TYPE, 1, C_MASK, 1, IS_JOINABLE, JOIN_WITH, ORDER> > >
+	struct scal_by_mask<T, STR, type_pack<type_pack<>, SI>, type_pack<valence_info<V_TYPE, 1, C_MASK, 1, IS_JOINABLE, JOIN_WITH, ORDER>, SPREAD...>, R_CONT, A_CONT>:
+		public scal_create_general_loop<T, STR, SI, type_pack<SPREAD...>, scal_loop<T, STR, SI, valence_info<V_TYPE, 1, C_MASK, 1, IS_JOINABLE, JOIN_WITH, ORDER> > >
 	{
 	};
 
 //	DONE COMMON
 	template <typename T, typename STR, typename SI, typename ... SPREAD, bool R_CONT, bool A_CONT>
-	struct scal_by_mask<T, STR, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, R_CONT, A_CONT>:
-		public scal_create_general_loop<T, STR, SI, type_sequence<SPREAD...>, scal_common_loop<T, STR, SI> >
+	struct scal_by_mask<T, STR, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, R_CONT, A_CONT>:
+		public scal_create_general_loop<T, STR, SI, type_pack<SPREAD...>, scal_common_loop<T, STR, SI> >
 	{
 	};
 
 	template <typename T, typename STR>
-	struct scal_runner: public scal_by_mask<T, STR, typename make_valence_info_and_join<STR>::type, type_sequence<>, false, false>
+	struct scal_runner: public scal_by_mask<T, STR, typename make_valence_info_and_join<STR>::type, type_pack<>, false, false>
 	{
 	};
 

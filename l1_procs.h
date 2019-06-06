@@ -162,18 +162,18 @@ void BR_solve_one(const tpp::tensor<T, STX>& x, const tpp::tensor<T, STU>& U, tp
 //  The tseq_element<>::type returns the element of a type_sequence
 //  Each type sequence has static const element size
 	typedef typename tpp::valence_parser<STX, STU, STV>::vd_by_mask vd_by_mask;
-	static_assert(tpp::tseq_element<1,vd_by_mask>::type::size==0,"x should not have free indices");
-	static_assert(tpp::tseq_element<2,vd_by_mask>::type::size==0,"U should not have free indices");
-	static_assert(tpp::tseq_element<3,vd_by_mask>::type::size==1,"x should be linked with U by one index");
-	static_assert(tpp::tseq_element<4,vd_by_mask>::type::size==0,"v should not have free indices");
-//	static_assert(tpp::tseq_element<5,vd_by_mask>::type::size<=1,"x and v can be linked by at most 1 index");
-	static_assert(tpp::tseq_element<5,vd_by_mask>::type::size==0,"multiple solution is not supported");
-	static_assert(tpp::tseq_element<6,vd_by_mask>::type::size==1,"v should be linked with U by one index");
-	static_assert(tpp::tseq_element<7,vd_by_mask>::type::size==0,"Through indices are not supported yet");
+	static_assert(tpp::size(typename decltype(tpp::get<1>(vd_by_mask()))::type())==0,"x should not have free indices");
+	static_assert(tpp::size(typename decltype(tpp::get<2>(vd_by_mask()))::type())==0,"U should not have free indices");
+	static_assert(tpp::size(typename decltype(tpp::get<3>(vd_by_mask()))::type())==1,"x should be linked with U by one index");
+	static_assert(tpp::size(typename decltype(tpp::get<4>(vd_by_mask()))::type())==0,"v should not have free indices");
+//	static_assert(tpp::size(typename decltype(tpp::get<5>(vd_by_mask()))::type())<=1,"x and v can be linked by at most 1 index");
+	static_assert(tpp::size(typename decltype(tpp::get<5>(vd_by_mask()))::type())==0,"multiple solution is not supported");
+	static_assert(tpp::size(typename decltype(tpp::get<6>(vd_by_mask()))::type())==1,"v should be linked with U by one index");
+	static_assert(tpp::size(typename decltype(tpp::get<7>(vd_by_mask()))::type())==0,"Through indices are not supported yet");
 //  Non-empty type sequences has a head type defined
 //  pos0, pos1, pos2 are position numbers of shape (dimension) of tensors included to the mask of the valence
-	size_t xsize=tpp::get<tpp::tseq_element<3,vd_by_mask>::type::head::pos0, STX>(x).length();
-	size_t vsize=tpp::get<tpp::tseq_element<6,vd_by_mask>::type::head::pos1, STV>(v).length();
+	size_t xsize=tpp::get<decltype(tpp::head(tpp::type_pack_element<3,vd_by_mask>()))::type::pos0, STX>(x).length();
+	size_t vsize=tpp::get<decltype(tpp::head(tpp::type_pack_element<6,vd_by_mask>()))::type::pos1, STV>(v).length();
 	size_t Asize=xsize+vsize;
 	size_t msize=xsize;
     if (ridge!=0.0)
@@ -185,8 +185,8 @@ void BR_solve_one(const tpp::tensor<T, STX>& x, const tpp::tensor<T, STU>& U, tp
 	tpp::MATRIX<> A({vsize+1, Asize});
 //  Valences of our tensors are known. They are stored as static members in valence_data type
 //  We create indices of known valences using usual C++ syntax
-	tpp::segmentIndex<tpp::tseq_element<6,vd_by_mask>::type::head::v_type> vi(vsize,0);
-	tpp::segmentIndex<tpp::tseq_element<3,vd_by_mask>::type::head::v_type> xi(xsize,0);
+	tpp::segmentIndex<decltype(tpp::head(tpp::type_pack_element<6,vd_by_mask>()))::type::v_type> vi(vsize,0);
+	tpp::segmentIndex<decltype(tpp::head(tpp::type_pack_element<3,vd_by_mask>()))::type::v_type> xi(xsize,0);
 //  Now we can copy the matrix U to the beginning of A
 	A(vi,xi)=U;
 	A(vsize,xi)=x;
@@ -228,7 +228,7 @@ void BR_solve_one(const tpp::tensor<T, STX>& x, const tpp::tensor<T, STU>& U, tp
 	tpp::MATRIX<> C({vsize,vsize});
 	tpp::VECTOR<> CX({vsize});
 //  We create an alias of U where x-dimension precedes v-dimension. So, mU is an optionally transposed U
-	auto mU=U.template order_indices<tpp::tseq_element<3,vd_by_mask>::type::head::v_type, tpp::tseq_element<6,vd_by_mask>::type::head::v_type>();
+	auto mU=U.template order_indices<decltype(tpp::head(tpp::type_pack_element<3,vd_by_mask>()))::type::v_type, decltype(tpp::head(tpp::type_pack_element<6,vd_by_mask>()))::type::v_type>();
 //	copy the identity matrix to the end of A
 	A(j,i+msize)=0.0;
 	A(i,i+msize)=1.0;

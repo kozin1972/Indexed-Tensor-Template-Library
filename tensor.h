@@ -80,13 +80,9 @@ namespace tpp
 		template <typename OLD_ST, typename ... Ts>
 		base_tensor(const tensor<T, OLD_ST>& src, const std::tuple<Ts...>& ind):ST(static_cast<OLD_ST>(src),ind,typename std::integral_constant<bool, defaultIndexVariant<Ts...>::defaultIndices>::type()),data_handle(src.data_handle),data(src.data) { shared_array<T>::share(data_handle); }
 		base_tensor(const base_tensor& src):ST(src),data_handle(src.data_handle), data(src.data) { shared_array<T>::share(data_handle); }
-		base_tensor(const size_t (&aw)[SNUM]):ST(),data_handle(NULL),data(NULL)
-		{
-			data_handle=allocate_new(aw);
-			data=data_handle;
-		}
+		base_tensor(const size_t (&aw)[SNUM]):ST(),data_handle(allocate_new(aw)),data(data_handle) {}
 		template <typename PREVST, int ... V_TYPE>
-		base_tensor(const PREVST& ost, int_sequence<V_TYPE...> vn): ST(ost, vn),data_handle(ost.data_handle), data(ost.data) {}
+		base_tensor(const PREVST& ost, std::integer_sequence<int, V_TYPE...> vn): ST(ost, vn),data_handle(ost.data_handle), data(ost.data) { shared_array<T>::share(data_handle); }
 		void move_ptrs(T *data_handle, T *data)
 		{
 			shared_array<T>::free(this->data_handle);
@@ -113,7 +109,7 @@ namespace tpp
 		template <typename OLD_ST, typename ... Ts>
 		tensor(const tensor<T, OLD_ST>& src, const std::tuple<Ts...>& ind):base_tensor<T, stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...> >(src,ind){}
 		template <typename PREVST, int ... V_TYPE>
-		tensor(const PREVST& ost, int_sequence<V_TYPE...> vn): base_tensor<T, stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...> >(ost, vn) {}
+		tensor(const PREVST& ost, std::integer_sequence<int, V_TYPE...> vn): base_tensor<T, stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...> >(ost, vn) {}
 //		template <typename ... Ts>
 //		inline std::array<size_t,SNUM> get_std_array(Ts...args)
 //		{
@@ -145,13 +141,13 @@ namespace tpp
 				throw outOfBounds(list.size()-1,POS,nrows);
 			for (auto it=list.begin();it!=list.end() && row[0]<nrows;it++,row[0]++)
 			{
-				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, int_sequence<check_shape<typename ST::template element_type<0>>::v_type>());
+				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, std::integer_sequence<int, check_shape<typename ST::template element_type<0>>::v_type>());
 				valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::apply_numeric_index(*this,res.data,row);
 				res.assign(POS+1,*it);
 			}
 			for (;row[0]<nrows;row[0]++)
 			{
-				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, int_sequence<check_shape<typename ST::template element_type<0>>::v_type>());
+				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, std::integer_sequence<int, check_shape<typename ST::template element_type<0>>::v_type>());
 				valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::apply_numeric_index(*this,res.data,row);
 				res=0;
 			}
@@ -173,13 +169,13 @@ public:
 				throw outOfBounds(list.size()-1,0,nrows);
 			for (auto it=list.begin();it!=list.end() && row[0]<nrows;it++,row[0]++)
 			{
-				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, int_sequence<check_shape<typename ST::template element_type<0>>::v_type>());
+				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, std::integer_sequence<int, check_shape<typename ST::template element_type<0>>::v_type>());
 				valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::apply_numeric_index(*this,res.data,row);
 				res.assign(1,*it);
 			}
 			for (;row[0]<nrows;row[0]++)
 			{
-				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, int_sequence<check_shape<typename ST::template element_type<0>>::v_type>());
+				tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::type> res(*this, std::integer_sequence<int, check_shape<typename ST::template element_type<0>>::v_type>());
 				valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, check_shape<typename ST::template element_type<0>>::v_type>::apply_numeric_index(*this,res.data,row);
 				res=0;
 			}
@@ -227,7 +223,7 @@ public:
 				throw outOfBounds();
 			using ret_type=tensor<T, typename parenthesis<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, Ts...>::type>;
 			ret_type ret(*this,ind);
-			index_shift_applyer<T, ST, typename ret_type::ost_type, std::tuple<Ts...>, 0, 0, type_sequence<SHAPES...>, Ts...>::shift_data(*this,ret.post(),ret.data,ind);
+			index_shift_applyer<T, ST, typename ret_type::ost_type, std::tuple<Ts...>, 0, 0, type_pack<SHAPES...>, Ts...>::shift_data(*this,ret.post(),ret.data,ind);
 			return ret;
 		}
 		template <typename ... Ts>
@@ -241,7 +237,7 @@ public:
 		tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, V_TYPE...>::type> remove_valences(size_t (&o)[sizeof...(V_TYPE)])
 		{
 			static_assert(IS_INDEXED,"Valence could be removed only from indexed tensors");
-			tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, V_TYPE...>::type> res(*this, int_sequence<V_TYPE...>());
+			tensor<T, typename valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, V_TYPE...>::type> res(*this, std::integer_sequence<int, V_TYPE...>());
 			valence_remover<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, V_TYPE...>::apply_numeric_index(*this,res.data,o);
 			return res;
 		}
@@ -323,7 +319,7 @@ public:
 			static_assert(IS_INDEXED,"Tensor is not indexed yet. Multiplication is prohibited.");
 			test_shape_length<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, STA>::test(std::tuple<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, STA>(*this,A));
 			typename div_runner<T, ST, STA>::type runner(*this, A);
-			static_assert(tseq_element<2,typename div_runner<T, ST, STA>::vi_by_mask>::type::size==0, "Free argument index in not allowed");
+			static_assert(size(typename decltype(get<2>(typename div_runner<T, ST, STA>::vi_by_mask()))::type())==0, "Free argument index in not allowed");
 			runner.run_sign(this->data, A.data);
 			return *this;
 		}
@@ -333,7 +329,7 @@ public:
 			static_assert(IS_INDEXED,"Tensor is not indexed yet. Multiplication is prohibited.");
 			test_shape_length<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, STA>::test(std::tuple<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, STA>(*this,A));
 			typename div_runner<T, ST, STA>::type runner(*this, A);
-			static_assert(tseq_element<2,typename div_runner<T, ST, STA>::vi_by_mask>::type::size==0, "Free argument index in not allowed");
+			static_assert(size(typename decltype(get<2>(typename div_runner<T, ST, STA>::vi_by_mask()))::type())==0, "Free argument index in not allowed");
 			runner.run_div(this->data, A.data);
 			return *this;
 		}
@@ -343,7 +339,7 @@ public:
 			static_assert(IS_INDEXED,"Tensor is not indexed yet. Multiplication is prohibited.");
 			test_shape_length<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, STA>::test(std::tuple<stuple<SNUM,CONT, IS_INDEXED, OST, SHAPES...>, STA>(*this,A));
 			typename div_runner<T, ST, STA>::type runner(*this, A);
-			static_assert(tseq_element<2,typename div_runner<T, ST, STA>::vi_by_mask>::type::size==0, "Free argument index in not allowed");
+			static_assert(size(typename decltype(get<2>(typename div_runner<T, ST, STA>::vi_by_mask()))::type())==0, "Free argument index in not allowed");
 			runner.run_scal(this->data, A.data);
 			return *this;
 		}
@@ -515,12 +511,12 @@ public:
 		tensor& operator+=(int number) { return shift(number); }
 		tensor& operator-=(int number) { return shift(-number); }
 		template <int ... V_ORDER>
-		ind_tensor<T, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, typename get_index_order<int_sequence<V_ORDER...>, type_sequence<SHAPES...> >::type> order_indices() const
+		ind_tensor<T, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, typename get_index_order<std::integer_sequence<int, V_ORDER...>, type_pack<SHAPES...> >::type> order_indices() const
 		{
 			static_assert(IS_INDEXED,"Order indices nakes sense only if tensor is indexed");
 			static_assert(sizeof...(V_ORDER)==SNUM,"Count of valences is not equal to number of dimensions");
-			static_assert(is_unique_int<V_ORDER...>::value,"Valences must be unique");
-			return static_cast<ind_tensor<T, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, typename get_index_order<int_sequence<V_ORDER...>, type_sequence<SHAPES...> >::type> >(*this);
+			static_assert(is_unique(std::integer_sequence<int, V_ORDER...>()),"Valences must be unique");
+			return static_cast<ind_tensor<T, stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, typename get_index_order<std::integer_sequence<int, V_ORDER...>, type_pack<SHAPES...> >::type> >(*this);
 		}
 	};
 

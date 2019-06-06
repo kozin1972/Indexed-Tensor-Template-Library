@@ -333,26 +333,26 @@ namespace tpp
 	};
 
 	template <typename T, typename STR, typename STA, typename SI, typename SPREAD, typename RA, typename HEAD, typename ... SUMA, typename BASE_LOOP>
-	struct copy_create_general_loop<T, STR, STA, SI, SPREAD, RA, type_sequence<HEAD, SUMA...>, BASE_LOOP>:
-		public copy_create_general_loop<T, STR, STA, SI, SPREAD, RA, type_sequence<SUMA...>, copy_suma_loop<T, STR, STA, SI, HEAD, BASE_LOOP> >
+	struct copy_create_general_loop<T, STR, STA, SI, SPREAD, RA, type_pack<HEAD, SUMA...>, BASE_LOOP>:
+		public copy_create_general_loop<T, STR, STA, SI, SPREAD, RA, type_pack<SUMA...>, copy_suma_loop<T, STR, STA, SI, HEAD, BASE_LOOP> >
 	{
 	};
 
 	template <typename T, typename STR, typename STA, typename SI, typename SPREAD, typename HEAD, typename ... RA, typename BASE_LOOP>
-	struct copy_create_general_loop<T, STR, STA, SI, SPREAD, type_sequence<HEAD, RA...>, type_sequence<>, BASE_LOOP>:
-		public copy_create_general_loop<T, STR, STA, SI, SPREAD, type_sequence<RA...>, type_sequence<>, copy_ra_loop<T, STR, STA, SI, HEAD, BASE_LOOP> >
+	struct copy_create_general_loop<T, STR, STA, SI, SPREAD, type_pack<HEAD, RA...>, type_pack<>, BASE_LOOP>:
+		public copy_create_general_loop<T, STR, STA, SI, SPREAD, type_pack<RA...>, type_pack<>, copy_ra_loop<T, STR, STA, SI, HEAD, BASE_LOOP> >
 	{
 	};
 
 	template <typename T, typename STR, typename STA, typename SI, typename HEAD, typename ... SPREAD, typename BASE_LOOP>
-	struct copy_create_general_loop<T, STR, STA, SI, type_sequence<HEAD, SPREAD...>, type_sequence<>, type_sequence<>, BASE_LOOP>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<>, type_sequence<>, copy_spread_loop<T, STR, STA, SI, typename iterator_getter_by_src_v_type<STR, SI, 0, HEAD::v_type>::template iterator_type<T>, false, BASE_LOOP> >
+	struct copy_create_general_loop<T, STR, STA, SI, type_pack<HEAD, SPREAD...>, type_pack<>, type_pack<>, BASE_LOOP>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<>, type_pack<>, copy_spread_loop<T, STR, STA, SI, typename iterator_getter_by_src_v_type<STR, SI, 0, HEAD::v_type>::template iterator_type<T>, false, BASE_LOOP> >
 	{
 	};
 
 	template <typename T, typename STR, typename STA, typename SI, typename HEAD, typename BASE_LOOP>
-	struct copy_create_general_loop<T, STR, STA, SI, type_sequence<HEAD>, type_sequence<>, type_sequence<>, BASE_LOOP>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<>, type_sequence<>, type_sequence<>, copy_spread_loop<T, STR, STA, SI, typename iterator_getter_by_src_v_type<STR, SI, 0, HEAD::v_type>::template iterator_type<T>, true, BASE_LOOP> >
+	struct copy_create_general_loop<T, STR, STA, SI, type_pack<HEAD>, type_pack<>, type_pack<>, BASE_LOOP>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<>, type_pack<>, type_pack<>, copy_spread_loop<T, STR, STA, SI, typename iterator_getter_by_src_v_type<STR, SI, 0, HEAD::v_type>::template iterator_type<T>, true, BASE_LOOP> >
 	{
 	};
 
@@ -531,22 +531,22 @@ namespace tpp
 	struct copy_insert_mask;
 
 	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, int H_V_TYPE, int H_MASK, int H_C_MASK, int H_V_MASK, bool H_IS_JOINABLE, int H_JOIN_WITH, size_t H_ORDER, typename ... VI, typename ... RES>
-	struct copy_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>, type_sequence<RES...> >:
+	struct copy_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>, type_pack<RES...> >:
 		public std::conditional<
 			(MASK==V_MASK && H_MASK!=H_V_MASK)?true:
 				(MASK!=V_MASK && H_MASK==H_V_MASK)?false:
 					(C_MASK > H_C_MASK)?true:
 						(C_MASK < H_C_MASK)?false:
 							(ORDER<H_ORDER),
-			type_sequence<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>,
-			copy_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<VI...>, type_sequence<RES..., valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER> > >
+			type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>,
+			copy_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<VI...>, type_pack<RES..., valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER> > >
 		>::type
 	{
 	};
 
 	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... RES>
-	struct copy_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<>, type_sequence<RES...> >:
-		public type_sequence<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER> >
+	struct copy_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<>, type_pack<RES...> >:
+		public type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER> >
 	{
 	};
 
@@ -555,15 +555,15 @@ namespace tpp
 
 //	DONE sum
 	template <typename T, typename STR, typename STA, typename SI, typename ... SPREAD, typename ... RA, int V_TYPE, int C_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct copy_test_sum<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER>, SUMA...>, R_CONT, A_CONT>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, asum_loop<T, STR, STA, SI, valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER> > >
+	struct copy_test_sum<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER>, SUMA...>, R_CONT, A_CONT>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, asum_loop<T, STR, STA, SI, valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER> > >
 	{
 	};
 
 //	DONE COMMON
 	template <typename T, typename STR, typename STA, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct copy_test_sum<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, copy_common_loop<T, STR, STA, SI> >
+	struct copy_test_sum<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, copy_common_loop<T, STR, STA, SI> >
 	{
 	};
 
@@ -572,51 +572,51 @@ namespace tpp
 
 //  SPREAD
 	template <typename T, typename STR, typename STA, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct copy_by_mask<T, STR, STA, type_sequence<type_sequence<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public copy_by_mask<T, STR, STA, type_sequence<type_sequence<VI...>, SI>, typename copy_insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<SPREAD...>, type_sequence<> >::type, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>
+	struct copy_by_mask<T, STR, STA, type_pack<type_pack<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public copy_by_mask<T, STR, STA, type_pack<type_pack<VI...>, SI>, typename copy_insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SPREAD...>, type_pack<> >::type, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>
 	{
 	};
 //  RA
 	template <typename T, typename STR, typename STA, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct copy_by_mask<T, STR, STA, type_sequence<type_sequence<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public copy_by_mask<T, STR, STA, type_sequence<type_sequence<VI...>, SI>, type_sequence<SPREAD...>, typename copy_insert_mask<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<RA...>, type_sequence<> >::type, type_sequence<SUMA...>, R_CONT || ((V_MASK==3 && (C_MASK & 1))), A_CONT || ((V_MASK==3 && (C_MASK & 2)))>
+	struct copy_by_mask<T, STR, STA, type_pack<type_pack<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public copy_by_mask<T, STR, STA, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, typename copy_insert_mask<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<RA...>, type_pack<> >::type, type_pack<SUMA...>, R_CONT || ((V_MASK==3 && (C_MASK & 1))), A_CONT || ((V_MASK==3 && (C_MASK & 2)))>
 	{
 	};
 //	SUMA
 	template <typename T, typename STR, typename STA, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct copy_by_mask<T, STR, STA, type_sequence<type_sequence<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public copy_by_mask<T, STR, STA, type_sequence<type_sequence<VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, typename copy_insert_mask<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<SUMA...>, type_sequence<> >::type, R_CONT, A_CONT>
+	struct copy_by_mask<T, STR, STA, type_pack<type_pack<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public copy_by_mask<T, STR, STA, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, typename copy_insert_mask<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SUMA...>, type_pack<> >::type, R_CONT, A_CONT>
 	{
 	};
 //	DONE lacpy
 	template <typename T, typename STR, typename STA, typename SI, typename ... SPREAD, int RAC_V_TYPE, bool RAC_IS_JOINABLE, int RAC_JOIN_WITH, size_t RAC_ORDER, int RAV_V_TYPE, int RAV_C_MASK, bool RAV_IS_JOINABLE, int RAV_JOIN_WITH, size_t RAV_ORDER, typename ... RA, typename ... SUMA>
-	struct copy_by_mask<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<valence_info<RAC_V_TYPE, 3, 3, 3, RAC_IS_JOINABLE, RAC_JOIN_WITH, RAC_ORDER>, valence_info<RAV_V_TYPE, 3, RAV_C_MASK, 3, RAV_IS_JOINABLE, RAV_JOIN_WITH, RAV_ORDER>, RA...>, type_sequence<SUMA...>, true, true>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, lacpy_loop<T, STR, STA, SI, valence_info<RAC_V_TYPE, 3, 3, 3, RAC_IS_JOINABLE, RAC_JOIN_WITH, RAC_ORDER>, valence_info<RAV_V_TYPE, 3, RAV_C_MASK, 3, RAV_IS_JOINABLE, RAV_JOIN_WITH, RAV_ORDER> > >
+	struct copy_by_mask<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<valence_info<RAC_V_TYPE, 3, 3, 3, RAC_IS_JOINABLE, RAC_JOIN_WITH, RAC_ORDER>, valence_info<RAV_V_TYPE, 3, RAV_C_MASK, 3, RAV_IS_JOINABLE, RAV_JOIN_WITH, RAV_ORDER>, RA...>, type_pack<SUMA...>, true, true>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, lacpy_loop<T, STR, STA, SI, valence_info<RAC_V_TYPE, 3, 3, 3, RAC_IS_JOINABLE, RAC_JOIN_WITH, RAC_ORDER>, valence_info<RAV_V_TYPE, 3, RAV_C_MASK, 3, RAV_IS_JOINABLE, RAV_JOIN_WITH, RAV_ORDER> > >
 	{
 	};
 //	DONE copy
 	template <typename T, typename STR, typename STA, typename SI, typename ... SPREAD, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct copy_by_mask<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, copy_loop<T, STR, STA, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER> > >
+	struct copy_by_mask<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, copy_loop<T, STR, STA, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER> > >
 	{
 	};
 
 //	DONE just spread
 	template <typename T, typename STR, typename STA, typename SI, int S_V_TYPE, int S_C_MASK, bool S_IS_JOINABLE, int S_JOIN_WITH, size_t S_ORDER, typename ... SPREAD, bool R_CONT, bool A_CONT>
-	struct copy_by_mask<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER>, SPREAD...>, type_sequence<>, type_sequence<>, R_CONT, A_CONT>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<>, type_sequence<>, just_spread_loop<T, STR, STA, SI, valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER> > >
+	struct copy_by_mask<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER>, SPREAD...>, type_pack<>, type_pack<>, R_CONT, A_CONT>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<>, type_pack<>, just_spread_loop<T, STR, STA, SI, valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER> > >
 	{
 	};
 
 //	DONE COMMON
 	template <typename T, typename STR, typename STA, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct copy_by_mask<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public copy_test_sum<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>
+	struct copy_by_mask<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public copy_test_sum<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>
 	{
 	};
 
 	template <typename T, typename STR, typename STA>
-	struct copy_runner: public copy_by_mask<T, STR, STA, typename make_valence_info_and_join<STR, STA>::type, type_sequence<>, type_sequence<>, type_sequence<>, false, false>
+	struct copy_runner: public copy_by_mask<T, STR, STA, typename make_valence_info_and_join<STR, STA>::type, type_pack<>, type_pack<>, type_pack<>, false, false>
 	{
 	};
 
@@ -625,61 +625,61 @@ namespace tpp
 
 //  SPREAD
 	template <typename T, typename STR, typename STA, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct asum_by_mask<T, STR, STA, type_sequence<type_sequence<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public asum_by_mask<T, STR, STA, type_sequence<type_sequence<VI...>, SI>, typename copy_insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<SPREAD...>, type_sequence<> >::type, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>
+	struct asum_by_mask<T, STR, STA, type_pack<type_pack<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public asum_by_mask<T, STR, STA, type_pack<type_pack<VI...>, SI>, typename copy_insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SPREAD...>, type_pack<> >::type, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>
 	{
 	};
 //  RA
 	template <typename T, typename STR, typename STA, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct asum_by_mask<T, STR, STA, type_sequence<type_sequence<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public asum_by_mask<T, STR, STA, type_sequence<type_sequence<VI...>, SI>, type_sequence<SPREAD...>, typename copy_insert_mask<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<RA...>, type_sequence<> >::type, type_sequence<SUMA...>, R_CONT || ((V_MASK==3 && (C_MASK & 1))), A_CONT || ((V_MASK==3 && (C_MASK & 2)))>
+	struct asum_by_mask<T, STR, STA, type_pack<type_pack<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public asum_by_mask<T, STR, STA, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, typename copy_insert_mask<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<RA...>, type_pack<> >::type, type_pack<SUMA...>, R_CONT || ((V_MASK==3 && (C_MASK & 1))), A_CONT || ((V_MASK==3 && (C_MASK & 2)))>
 	{
 	};
 //	SUMA
 	template <typename T, typename STR, typename STA, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct asum_by_mask<T, STR, STA, type_sequence<type_sequence<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public asum_by_mask<T, STR, STA, type_sequence<type_sequence<VI...>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, typename copy_insert_mask<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_sequence<SUMA...>, type_sequence<> >::type, R_CONT, A_CONT>
+	struct asum_by_mask<T, STR, STA, type_pack<type_pack<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public asum_by_mask<T, STR, STA, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, type_pack<RA...>, typename copy_insert_mask<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SUMA...>, type_pack<> >::type, R_CONT, A_CONT>
 	{
 	};
 
 // DONE ASUM
 	template <typename T, typename STR, typename STA, typename SI, typename ... SPREAD, typename ... RA, int V_TYPE, int C_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct asum_by_mask<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER>, SUMA...>, R_CONT, A_CONT>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, asum_loop<T, STR, STA, SI, valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER> > >
+	struct asum_by_mask<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER>, SUMA...>, R_CONT, A_CONT>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, asum_loop<T, STR, STA, SI, valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER> > >
 	{
-		using vi_by_mask=type_sequence<
-				type_sequence<>,
-				type_sequence<SPREAD...>,
-				type_sequence<valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER>, SUMA...>,
-				type_sequence<RA...> >;
+		using vi_by_mask=type_pack<
+				type_pack<>,
+				type_pack<SPREAD...>,
+				type_pack<valence_info<V_TYPE, 2, C_MASK, 2, IS_JOINABLE, JOIN_WITH, ORDER>, SUMA...>,
+				type_pack<RA...> >;
 	};
 
 //	DONE just spread
 	template <typename T, typename STR, typename STA, typename SI, int S_V_TYPE, int S_C_MASK, bool S_IS_JOINABLE, int S_JOIN_WITH, size_t S_ORDER, typename ... SPREAD, bool R_CONT, bool A_CONT>
-	struct asum_by_mask<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER>, SPREAD...>, type_sequence<>, type_sequence<>, R_CONT, A_CONT>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<>, type_sequence<>, just_spread_loop<T, STR, STA, SI, valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER> > >
+	struct asum_by_mask<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER>, SPREAD...>, type_pack<>, type_pack<>, R_CONT, A_CONT>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<>, type_pack<>, just_spread_loop<T, STR, STA, SI, valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER> > >
 	{
-		using vi_by_mask=type_sequence<
-				type_sequence<>,
-				type_sequence<valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER>, SPREAD...>,
-				type_sequence<>,
-				type_sequence<> >;
+		using vi_by_mask=type_pack<
+				type_pack<>,
+				type_pack<valence_info<S_V_TYPE, 1, S_C_MASK, 1, S_IS_JOINABLE, S_JOIN_WITH, S_ORDER>, SPREAD...>,
+				type_pack<>,
+				type_pack<> >;
 	};
 
 //	DONE COMMON
 	template <typename T, typename STR, typename STA, typename SI, typename ... SPREAD, typename ... RA, typename ... SUMA, bool R_CONT, bool A_CONT>
-	struct asum_by_mask<T, STR, STA, type_sequence<type_sequence<>, SI>, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, R_CONT, A_CONT>:
-		public copy_create_general_loop<T, STR, STA, SI, type_sequence<SPREAD...>, type_sequence<RA...>, type_sequence<SUMA...>, copy_common_loop<T, STR, STA, SI> >
+	struct asum_by_mask<T, STR, STA, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, R_CONT, A_CONT>:
+		public copy_create_general_loop<T, STR, STA, SI, type_pack<SPREAD...>, type_pack<RA...>, type_pack<SUMA...>, copy_common_loop<T, STR, STA, SI> >
 	{
-		using vi_by_mask=type_sequence<
-				type_sequence<>,
-				type_sequence<SPREAD...>,
-				type_sequence<SUMA...>,
-				type_sequence<RA...> >;
+		using vi_by_mask=type_pack<
+				type_pack<>,
+				type_pack<SPREAD...>,
+				type_pack<SUMA...>,
+				type_pack<RA...> >;
 	};
 
 	template <typename T, typename STR, typename STA>
-	struct asum_runner: public asum_by_mask<T, STR, STA, typename make_valence_info_and_join<STR, STA>::type, type_sequence<>, type_sequence<>, type_sequence<>, false, false>
+	struct asum_runner: public asum_by_mask<T, STR, STA, typename make_valence_info_and_join<STR, STA>::type, type_pack<>, type_pack<>, type_pack<>, false, false>
 	{
 	};
 
