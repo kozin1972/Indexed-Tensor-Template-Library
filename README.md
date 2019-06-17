@@ -1,4 +1,4 @@
-# tpptensor
+
                                      Tensor Template Library
 
 Tensor Template Library is driven by indices and based on BLAS. It works at compile time.
