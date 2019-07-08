@@ -17,7 +17,7 @@
 namespace tpp
 {
 
-	template <typename T, typename STR, typename SI>
+	template <typename T, typename STR>
 	struct scal_common_loop
 	{
 		const STR& str;
@@ -38,7 +38,7 @@ namespace tpp
 	};
 
 
-	template <typename T, typename STR, typename SI, typename ITTYPE, typename BASE_LOOP>
+	template <typename T, typename STR, typename ITTYPE, typename BASE_LOOP>
 	struct scal_spread_loop: public BASE_LOOP
 	{
 	private:
@@ -61,23 +61,20 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename SI, typename SPREAD, typename BASE_LOOP>
+	template <typename T, typename STR, typename SPREAD, typename BASE_LOOP>
 	struct scal_create_general_loop
 	{
 		using type=BASE_LOOP;
 	};
 
-	template <typename T, typename STR, typename SI, typename HEAD, typename ... SPREAD, typename BASE_LOOP>
-	struct scal_create_general_loop<T, STR, SI, type_pack<HEAD, SPREAD...>, BASE_LOOP>:
-		public scal_create_general_loop<T, STR, SI, type_pack<SPREAD...>, scal_spread_loop<T, STR, SI, typename iterator_getter_by_src_v_type<STR, SI, 0, HEAD::v_type>::template iterator_type<T>, BASE_LOOP> >
+	template <typename T, typename STR, typename HEAD, typename ... SPREAD, typename BASE_LOOP>
+	struct scal_create_general_loop<T, STR, type_sequence<HEAD, SPREAD...>, BASE_LOOP>:
+		public scal_create_general_loop<T, STR, type_sequence<SPREAD...>, scal_spread_loop<T, STR, typename vd_iterator_getter<STR, HEAD, 0>::template iterator_type<T>, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename SI, typename RAV>
-	struct scal_loop;
-
-	template <typename T, typename STR, typename SI, int V_TYPE, int C_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER>
-	struct scal_loop<T, STR, SI, valence_info<V_TYPE, 1, C_MASK, 1, IS_JOINABLE, JOIN_WITH, ORDER> >
+	template <typename T, typename STR, typename VD>
+	struct scal_loop
 	{
 		const STR& str;
 		const T alpha;
@@ -86,12 +83,12 @@ namespace tpp
 		BLAS_INTEGER incr;
 	public:
 		scal_loop(const STR& str): str(str), alpha(1),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T>::length(str)),
-		incr(iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T>::step(str))
+		N(vd_iterator_getter<STR, VD, 0>::template iterator_type<T>::length(str)),
+		incr(vd_iterator_getter<STR, VD, 0>::template iterator_type<T>::step(str))
 		{}
 		scal_loop(const STR& str, T alpha): str(str), alpha(alpha),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T>::length(str)),
-		incr(iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T>::step(str))
+		N(vd_iterator_getter<STR, VD, 0>::template iterator_type<T>::length(str)),
+		incr(vd_iterator_getter<STR, VD, 0>::template iterator_type<T>::step(str))
 		{}
 		void run_scal(T *r)
 		{
@@ -103,55 +100,20 @@ namespace tpp
 		}
 	};
 
+	template <typename T, typename STR, typename VD>
+	struct scal_runner;
 
-	template <typename ELEMENT, typename VI, typename RES>
-	struct scal_insert_mask;
-
-	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, int H_V_TYPE, int H_MASK, int H_C_MASK, int H_V_MASK, bool H_IS_JOINABLE, int H_JOIN_WITH, size_t H_ORDER, typename ... VI, typename ... RES>
-	struct scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>, type_pack<RES...> >:
-		public std::conditional<
-			(MASK==V_MASK && H_MASK!=H_V_MASK)?true:
-				(MASK!=V_MASK && H_MASK==H_V_MASK)?false:
-					(C_MASK > H_C_MASK)?true:
-						(C_MASK < H_C_MASK)?false:
-							(ORDER<H_ORDER),
-			type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>,
-			scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<VI...>, type_pack<RES..., valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER> > >
-		>::type
-	{
-	};
-
-	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... RES>
-	struct scal_insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<>, type_pack<RES...> >:
-		public type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER> >
-	{
-	};
-
-	template <typename T, typename STR, typename VISI, typename SPREAD, bool R_CONT, bool A_CONT>
-	struct scal_by_mask;
-
-//  SPREAD
-	template <typename T, typename STR, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, bool R_CONT, bool A_CONT>
-	struct scal_by_mask<T, STR, type_pack<type_pack<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, R_CONT, A_CONT>:
-		public scal_by_mask<T, STR, type_pack<type_pack<VI...>, SI>, typename scal_insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SPREAD...>, type_pack<> >::type, R_CONT, A_CONT>
-	{
-	};
 //	DONE VECTOR
-	template <typename T, typename STR, typename SI, typename ... SPREAD, int V_TYPE, int C_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, bool R_CONT, bool A_CONT>
-	struct scal_by_mask<T, STR, type_pack<type_pack<>, SI>, type_pack<valence_info<V_TYPE, 1, C_MASK, 1, IS_JOINABLE, JOIN_WITH, ORDER>, SPREAD...>, R_CONT, A_CONT>:
-		public scal_create_general_loop<T, STR, SI, type_pack<SPREAD...>, scal_loop<T, STR, SI, valence_info<V_TYPE, 1, C_MASK, 1, IS_JOINABLE, JOIN_WITH, ORDER> > >
+	template <typename T, typename STR, typename CONT_MASK, int S_V_TYPE, int S_C_MASK, int S_NEXT_VALENCE, size_t ... S_POS, typename ... M10, typename ... SPREAD>
+	struct scal_runner<T, STR, type_sequence<CONT_MASK, type_sequence<type_sequence<valence_data<S_V_TYPE, 1, S_C_MASK, 1, S_NEXT_VALENCE, S_POS...>, M10...>,SPREAD...>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<> > >:
+		public scal_create_general_loop<T, STR, type_sequence<SPREAD...>, scal_loop<T, STR, type_sequence<valence_data<S_V_TYPE, 1, S_C_MASK, 1, S_NEXT_VALENCE, S_POS...>, M10...> > >
 	{
 	};
 
 //	DONE COMMON
-	template <typename T, typename STR, typename SI, typename ... SPREAD, bool R_CONT, bool A_CONT>
-	struct scal_by_mask<T, STR, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, R_CONT, A_CONT>:
-		public scal_create_general_loop<T, STR, SI, type_pack<SPREAD...>, scal_common_loop<T, STR, SI> >
-	{
-	};
-
-	template <typename T, typename STR>
-	struct scal_runner: public scal_by_mask<T, STR, typename make_valence_info_and_join<STR>::type, type_pack<>, false, false>
+	template <typename T, typename STR, typename CONT_MASK, int S_V_TYPE, int S_C_MASK, int S_V_MASK, int S_NEXT_VALENCE, size_t ... S_POS, typename ... M10, typename ... SPREAD>
+	struct scal_runner<T, STR, type_sequence<CONT_MASK, type_sequence<type_sequence<valence_data<S_V_TYPE, 1, S_C_MASK, S_V_MASK, S_NEXT_VALENCE, S_POS...>, M10...>,SPREAD...>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<> > >:
+		public scal_create_general_loop<T, STR, type_sequence<type_sequence<valence_data<S_V_TYPE, 1, S_C_MASK, S_V_MASK, S_NEXT_VALENCE, S_POS...>, M10...>, SPREAD...>, scal_common_loop<T, STR> >
 	{
 	};
 

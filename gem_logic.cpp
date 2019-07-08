@@ -10,15 +10,15 @@
  *  Possible output:
  *
  *  Starting normal gem...
- *  ...Done 28ms
+ *  ...Done 7ms
  *  Starting nested loops...
- *  ...Done 5416ms
+ *  ...Done 5242ms
  *  Verification of normal gem...
  *  ...Done
  *  Starting unoptimized gem...
- *  ...Done 174ms
+ *  ...Done 137ms
  *  Verification of unoptimized gem...
- *  ...Done*
+ *  ...Done
  *
  *  Please report bugs to tpptensor@mail.ru
  */

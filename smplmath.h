@@ -16,7 +16,7 @@
 namespace tpp
 {
 	template <typename T>
-	inline T sign(T v)
+	inline T sign(T v) noexcept
 	{
 		return v?(v>0.0?1.0:-1.0):0.0;
 	}
@@ -40,46 +40,46 @@ namespace tpp
 	}
 
 	template <typename T>
-	T sin(T v);
+	T sin(T v) noexcept;
 
 	template<>
-	inline double sin<double>(double v)
+	inline double sin<double>(double v) noexcept
 	{
 		return ::sin(v);
 	}
 
 	template <typename T>
-	T cos(T v);
+	T cos(T v) noexcept;
 
 	template<>
-	inline double cos<double>(double v)
+	inline double cos<double>(double v) noexcept
 	{
 		return ::cos(v);
 	}
 
 	template <typename T>
-	T abs(T v);
+	T abs(T v) noexcept;
 
 	template<>
-	inline double abs<double>(double v)
+	inline double abs<double>(double v) noexcept
 	{
 		return ::fabs(v);
 	}
 
 	template <typename T>
-	inline T rand();
+	inline T rand() noexcept;
 
 	template <>
-	inline double rand<double>()
+	inline double rand<double>() noexcept
 	{
 		return (double)(((double)::rand())/(double)RAND_MAX+::rand())/(double)(RAND_MAX);
 	}
 
 	template <typename T>
-	T norm_rand();
+	T norm_rand() noexcept;
 
 	template<>
-	inline double norm_rand<double>()
+	inline double norm_rand<double>() noexcept
 	{
 		return sqrt<double>(-2.0*log<double>(1.0-rand<double>()))*cos<double>(2.0*M_PI*rand<double>());
 	}

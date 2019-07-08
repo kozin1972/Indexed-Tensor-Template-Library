@@ -19,15 +19,12 @@
 namespace tpp
 {
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename BASE_LOOP>
-	struct gem_sumb_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_sumb_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_sumb_loop: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STB, SI, 2, V_TYPE>::template iterator_type<T> itype;
+		typedef typename vd_iterator_getter<STB, HEAD, 2>::template iterator_type<T> itype;
 		gem_sumb_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
 		void run(T *r, const T *a, const T *b)
@@ -47,16 +44,13 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename BASE_LOOP>
-	struct gem_ab_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_ab_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_ab_loop: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STA, SI, 1, V_TYPE>::template iterator_type<T> aitype;
-		typedef typename iterator_getter_by_src_v_type<STB, SI, 2, V_TYPE>::template iterator_type<T> bitype;
+		typedef typename vd_iterator_getter<STA, HEAD, 1>::template iterator_type<T> aitype;
+		typedef typename vd_iterator_getter<STB, HEAD, 2>::template iterator_type<T> bitype;
 		gem_ab_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
 		void run(T *r, const T *a, const T *b)
@@ -78,16 +72,13 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename BASE_LOOP>
-	struct gem_rb_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_rb_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_rb_loop: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T> ritype;
-		typedef typename iterator_getter_by_src_v_type<STB, SI, 2, V_TYPE>::template iterator_type<T> bitype;
+		typedef typename vd_iterator_getter<STR, HEAD, 0>::template iterator_type<T> ritype;
+		typedef typename vd_iterator_getter<STB, HEAD, 2>::template iterator_type<T> bitype;
 		gem_rb_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
 		void run(T *r, const T *a, const T *b)
@@ -120,15 +111,12 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename BASE_LOOP>
-	struct gem_suma_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_suma_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_suma_loop: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STA, SI, 1, V_TYPE>::template iterator_type<T> itype;
+		typedef typename vd_iterator_getter<STA, HEAD, 1>::template iterator_type<T> itype;
 		gem_suma_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
 		void run(T *r, const T *a, const T *b)
@@ -148,16 +136,13 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename BASE_LOOP>
-	struct gem_ra_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_ra_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_ra_loop: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T> ritype;
-		typedef typename iterator_getter_by_src_v_type<STA, SI, 1, V_TYPE>::template iterator_type<T> aitype;
+		typedef typename vd_iterator_getter<STR, HEAD, 0>::template iterator_type<T> ritype;
+		typedef typename vd_iterator_getter<STA, HEAD, 1>::template iterator_type<T> aitype;
 		gem_ra_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
 		void run(T *r, const T *a, const T *b)
@@ -190,17 +175,14 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename BASE_LOOP>
-	struct gem_com_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_com_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_com_loop: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T> ritype;
-		typedef typename iterator_getter_by_src_v_type<STA, SI, 1, V_TYPE>::template iterator_type<T> aitype;
-		typedef typename iterator_getter_by_src_v_type<STB, SI, 2, V_TYPE>::template iterator_type<T> bitype;
+		typedef typename vd_iterator_getter<STR, HEAD, 0>::template iterator_type<T> ritype;
+		typedef typename vd_iterator_getter<STA, HEAD, 1>::template iterator_type<T> aitype;
+		typedef typename vd_iterator_getter<STB, HEAD, 2>::template iterator_type<T> bitype;
 		gem_com_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
 		void run(T *r, const T *a, const T *b)
@@ -235,16 +217,16 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, bool IS_FIRST, typename BASE_LOOP>
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, bool IS_FIRST, typename BASE_LOOP>
 	struct gem_spread_loop;
 
 // LAST; NOT FIRST
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_spread_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, false, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_LOOP>: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T> itype;
+		typedef typename vd_iterator_getter<STR, HEAD, 0>::template iterator_type<T> itype;
 		gem_spread_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta):
 			BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
@@ -281,12 +263,12 @@ namespace tpp
 	};
 
 // LAST; FIRST
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename BASE_LOOP>
-	struct gem_spread_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, true, BASE_LOOP>: public BASE_LOOP
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_spread_loop<T, STR, STA, STB, HEAD, true, BASE_LOOP>: public BASE_LOOP
 	{
 	private:
 	public:
-		typedef typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T> itype;
+		typedef typename vd_iterator_getter<STR, HEAD, 0>::template iterator_type<T> itype;
 		gem_spread_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta):
 			BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
@@ -329,22 +311,16 @@ namespace tpp
 			ri=r0;
 			add0_first(r0, ri);
 		}
-//		void add(T *r, const T *a, const T *b)
-//		{
-//			itype it(this->str, r);
-//			for (;it.not_end(r);it.move_one(r))
-//				BASE_LOOP::add(r,a,b);
-//		}
 	};
 
 // NOT LAST; NOT FIRST
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename HEAD, typename BASE_BASE_LOOP>
-	struct gem_spread_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, false, gem_spread_loop<T, STR, STA, STB, SI, HEAD, false, BASE_BASE_LOOP> >: public gem_spread_loop<T, STR, STA, STB, SI, HEAD, false, BASE_BASE_LOOP>
+	template <typename T, typename STR, typename STA, typename STB, typename H0, typename HEAD, typename BASE_BASE_LOOP>
+	struct gem_spread_loop<T, STR, STA, STB, H0, false, gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_BASE_LOOP> >: public gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_BASE_LOOP>
 	{
 	private:
-		typedef gem_spread_loop<T, STR, STA, STB, SI, HEAD, false, BASE_BASE_LOOP> BASE_LOOP;
+		typedef gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_BASE_LOOP> BASE_LOOP;
 	public:
-		typedef typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T> itype;
+		typedef typename vd_iterator_getter<STR, H0, 0>::template iterator_type<T> itype;
 		gem_spread_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta):
 			BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
@@ -383,13 +359,13 @@ namespace tpp
 	};
 
 // NOT LAST; FIRST
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename HEAD, typename BASE_BASE_LOOP>
-	struct gem_spread_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, true, gem_spread_loop<T, STR, STA, STB, SI, HEAD, false, BASE_BASE_LOOP> >: public gem_spread_loop<T, STR, STA, STB, SI, HEAD, false, BASE_BASE_LOOP>
+	template <typename T, typename STR, typename STA, typename STB, typename H0, typename HEAD, typename BASE_BASE_LOOP>
+	struct gem_spread_loop<T, STR, STA, STB, H0, true, gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_BASE_LOOP> >: public gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_BASE_LOOP>
 	{
 	private:
-		typedef gem_spread_loop<T, STR, STA, STB, SI, HEAD, false, BASE_BASE_LOOP> BASE_LOOP;
+		typedef gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_BASE_LOOP> BASE_LOOP;
 	public:
-		typedef typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T> itype;
+		typedef typename vd_iterator_getter<STR, H0, 0>::template iterator_type<T> itype;
 		gem_spread_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta):
 			BASE_LOOP(str, sta, stb, alpha, beta)
 		{}
@@ -436,65 +412,65 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename SPREAD, typename COMMON, typename RA, typename RB, typename AB, typename SUMA, typename SUMB, typename BASE_LOOP>
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename SUMA, typename RA, typename SUMB, typename RB, typename AB, typename COMMON, typename BASE_LOOP>
 	struct gem_create_general_loop
 	{
 		using type=BASE_LOOP;
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename SPREAD, typename COMMON, typename RA, typename RB, typename AB, typename SUMA, typename HEAD, typename ... SUMB, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, RB, AB, SUMA, type_pack<HEAD, SUMB...>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, RB, AB, SUMA, type_pack<SUMB...>, gem_sumb_loop<T, STR, STA, STB, SI, HEAD, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename SUMA, typename RA, typename HEAD, typename ... SUMB, typename RB, typename AB, typename COMMON, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, SPREAD, SUMA, RA, type_sequence<HEAD, SUMB...>, RB, AB, COMMON, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, SPREAD, SUMA, RA, type_sequence<SUMB...>, RB, AB, COMMON, gem_sumb_loop<T, STR, STA, STB, HEAD, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename SPREAD, typename COMMON, typename RA, typename RB, typename HEAD, typename ... AB, typename SUMA, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, RB, type_pack<HEAD, AB...>, SUMA, type_pack<>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, RB, type_pack<AB...>, SUMA, type_pack<>, gem_ab_loop<T, STR, STA, STB, SI, HEAD, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename SUMA, typename RA, typename RB, typename HEAD, typename ... AB, typename COMMON, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, SPREAD, SUMA, RA, type_sequence<>, RB, type_sequence<HEAD, AB...>, COMMON, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, SPREAD, SUMA, RA, type_sequence<>, RB, type_sequence<AB...>, COMMON, gem_ab_loop<T, STR, STA, STB, HEAD, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename SPREAD, typename COMMON, typename RA, typename HEAD, typename ... RB, typename SUMA, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, type_pack<HEAD, RB...>, type_pack<>, SUMA, type_pack<>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, type_pack<RB...>, type_pack<>, SUMA, type_pack<>, gem_rb_loop<T, STR, STA, STB, SI, HEAD, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename SUMA, typename RA, typename HEAD, typename ... RB, typename COMMON, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, SPREAD, SUMA, RA, type_sequence<>, type_sequence<HEAD, RB...>, type_sequence<>, COMMON, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, SPREAD, SUMA, RA, type_sequence<>, type_sequence<RB...>, type_sequence<>, COMMON, gem_rb_loop<T, STR, STA, STB, HEAD, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename SPREAD, typename COMMON, typename RA, typename HEAD, typename ... SUMA, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, type_pack<>, type_pack<>, type_pack<HEAD, SUMA...>, type_pack<>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, RA, type_pack<>, type_pack<>, type_pack<SUMA...>, type_pack<>, gem_suma_loop<T, STR, STA, STB, SI, HEAD, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename HEAD, typename ... SUMA, typename RA, typename COMMON, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, SPREAD, type_sequence<HEAD, SUMA...>, RA, type_sequence<>, type_sequence<>, type_sequence<>, COMMON, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, SPREAD, type_sequence<SUMA...>, RA, type_sequence<>, type_sequence<>, type_sequence<>, COMMON, gem_suma_loop<T, STR, STA, STB, HEAD, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename SPREAD, typename COMMON, typename HEAD, typename ... RA, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, type_pack<HEAD, RA...>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, COMMON, type_pack<RA...>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, gem_ra_loop<T, STR, STA, STB, SI, HEAD, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename HEAD, typename ... RA, typename COMMON, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, SPREAD, type_sequence<>, type_sequence<HEAD, RA...>, type_sequence<>, type_sequence<>, type_sequence<>, COMMON, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, SPREAD, type_sequence<>, type_sequence<RA...>, type_sequence<>, type_sequence<>, type_sequence<>, COMMON, gem_ra_loop<T, STR, STA, STB, HEAD, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename SPREAD, typename HEAD, typename ... COMMON, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, type_pack<HEAD, COMMON...>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, SPREAD, type_pack<COMMON...>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, gem_com_loop<T, STR, STA, STB, SI, HEAD, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename HEAD, typename ... COMMON, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, SPREAD, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<HEAD, COMMON...>, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, SPREAD, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<COMMON...>, gem_com_loop<T, STR, STA, STB, HEAD, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename ... SPREAD, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, type_pack<HEAD, SPREAD...>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, gem_spread_loop<T, STR, STA, STB, SI, HEAD, false, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename ... SPREAD, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, type_sequence<HEAD, SPREAD...>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, gem_spread_loop<T, STR, STA, STB, HEAD, false, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename HEAD, typename BASE_LOOP>
-	struct gem_create_general_loop<T, STR, STA, STB, SI, type_pack<HEAD>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, BASE_LOOP>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, gem_spread_loop<T, STR, STA, STB, SI, HEAD, true, BASE_LOOP> >
+	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>
+	struct gem_create_general_loop<T, STR, STA, STB, type_sequence<HEAD>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, BASE_LOOP>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, type_sequence<>, gem_spread_loop<T, STR, STA, STB, HEAD, true, BASE_LOOP> >
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename RA, typename RB, typename AB, int VARIANT>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB, int VARIANT>
 	struct gemm_loop;
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 6>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 6>
 	{
 		const STR& str;
 		const STA& sta;
@@ -511,12 +487,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::length(str)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::length(str)),
-		common(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::length(stb)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::length(str)),
+		N(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::length(str)),
+		common(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::length(stb)),
+		lda(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -541,8 +517,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 7>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 7>
 	{
 		const STR& str;
 		const STA& sta;
@@ -559,12 +535,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::length(sta)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::length(str)),
-		common(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::length(stb)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::length(sta)),
+		N(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::length(str)),
+		common(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::length(stb)),
+		lda(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -589,8 +565,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 4>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 4>
 	{
 		const STR& str;
 		const STA& sta;
@@ -607,12 +583,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::length(str)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::length(str)),
-		common(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::length(stb)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::length(str)),
+		N(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::length(str)),
+		common(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::length(stb)),
+		lda(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -637,8 +613,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 5>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 5>
 	{
 		const STR& str;
 		const STA& sta;
@@ -655,12 +631,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::length(str)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::length(str)),
-		common(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::length(stb)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::length(str)),
+		N(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::length(str)),
+		common(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::length(stb)),
+		lda(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -685,8 +661,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 2>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 2>
 	{
 		const STR& str;
 		const STA& sta;
@@ -703,12 +679,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::length(stb)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::length(str)),
-		common(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::length(sta)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::length(stb)),
+		N(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::length(str)),
+		common(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::length(sta)),
+		lda(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -733,8 +709,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 3>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 3>
 	{
 		const STR& str;
 		const STA& sta;
@@ -751,12 +727,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::length(sta)),
-		N(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::length(stb)),
-		common(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::length(sta)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::length(sta)),
+		N(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::length(stb)),
+		common(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::length(sta)),
+		lda(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -781,8 +757,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 0>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 0>
 	{
 		const STR& str;
 		const STA& sta;
@@ -799,12 +775,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::length(stb)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::length(str)),
-		common(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::length(sta)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::length(stb)),
+		N(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::length(str)),
+		common(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::length(sta)),
+		lda(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -829,8 +805,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 1>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, typename AB>
+	struct gemm_loop<T, STR, STA, STB, RA, RB, AB, 1>
 	{
 		const STR& str;
 		const STA& sta;
@@ -847,12 +823,12 @@ namespace tpp
 	public:
 		gemm_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::length(str)),
-		N(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::length(stb)),
-		common(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::length(sta)),
-		lda(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		ldb(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::step(stb)),
-		ldc(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::length(str)),
+		N(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::length(stb)),
+		common(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::length(sta)),
+		lda(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		ldb(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::step(stb)),
+		ldc(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -877,11 +853,11 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename RA, typename AB, int VARIANT>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename AB, int VARIANT>
 	struct gemvA_loop;
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemvA_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 0>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename AB>
+	struct gemvA_loop<T, STR, STA, STB, RA, AB, 0>
 	{
 		const STR& str;
 		const STA& sta;
@@ -897,11 +873,11 @@ namespace tpp
 	public:
 		gemvA_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::length(sta)),
-		N(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::length(sta)),
-		LDA(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		INCX(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb)),
-		INCY(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::length(sta)),
+		N(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::length(sta)),
+		LDA(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		INCX(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb)),
+		INCY(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -922,8 +898,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemvA_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 2>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename AB>
+	struct gemvA_loop<T, STR, STA, STB, RA, AB, 2>
 	{
 		const STR& str;
 		const STA& sta;
@@ -939,11 +915,11 @@ namespace tpp
 	public:
 		gemvA_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::length(sta)),
-		N(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::length(sta)),
-		LDA(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::step(sta)),
-		INCX(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb)),
-		INCY(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::length(sta)),
+		N(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::length(sta)),
+		LDA(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::step(sta)),
+		INCX(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb)),
+		INCY(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -964,11 +940,11 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename RB, typename AB, int VARIANT>
+	template <typename T, typename STR, typename STA, typename STB, typename RB, typename AB, int VARIANT>
 	struct gemvB_loop;
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemvB_loop<T, STR, STA, STB, SI, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 0>
+	template <typename T, typename STR, typename STA, typename STB, typename RB, typename AB>
+	struct gemvB_loop<T, STR, STA, STB, RB, AB, 0>
 	{
 		const STR& str;
 		const STA& sta;
@@ -984,11 +960,11 @@ namespace tpp
 	public:
 		gemvB_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::length(stb)),
-		N(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::length(stb)),
-		LDB(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::step(stb)),
-		INCX(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		INCY(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::length(stb)),
+		N(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::length(stb)),
+		LDB(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::step(stb)),
+		INCX(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		INCY(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -1009,8 +985,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gemvB_loop<T, STR, STA, STB, SI, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, 4>
+	template <typename T, typename STR, typename STA, typename STB, typename RB, typename AB>
+	struct gemvB_loop<T, STR, STA, STB, RB, AB, 4>
 	{
 		const STR& str;
 		const STA& sta;
@@ -1026,11 +1002,11 @@ namespace tpp
 	public:
 		gemvB_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::length(stb)),
-		N(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::length(stb)),
-		LDB(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb)),
-		INCX(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		INCY(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::length(stb)),
+		N(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::length(stb)),
+		LDB(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb)),
+		INCX(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		INCY(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -1051,11 +1027,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename AB>
-	struct gem_dot_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER>
-	struct gem_dot_loop<T, STR, STA, STB, SI, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER> >
+	template <typename T, typename STR, typename STA, typename STB, typename AB>
+	struct gem_dot_loop
 	{
 		const STR& str;
 		const STA& sta;
@@ -1069,9 +1042,9 @@ namespace tpp
 	public:
 		gem_dot_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		qty(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::length(sta)),
-		incA(iterator_getter_by_src_v_type<STA, SI, 1, AB_V_TYPE>::template iterator_type<T>::step(sta)),
-		incB(iterator_getter_by_src_v_type<STB, SI, 2, AB_V_TYPE>::template iterator_type<T>::step(stb))
+		qty(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::length(sta)),
+		incA(vd_iterator_getter<STA, AB, 1>::template iterator_type<T>::step(sta)),
+		incB(vd_iterator_getter<STB, AB, 2>::template iterator_type<T>::step(stb))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -1093,11 +1066,11 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename RA, typename RB, int VARIANT>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB, int VARIANT>
 	struct ger_loop;
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER>
-	struct ger_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, 0>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB>
+	struct ger_loop<T, STR, STA, STB, RA, RB, 0>
 	{
 		const STR& str;
 		const STA& sta;
@@ -1113,11 +1086,11 @@ namespace tpp
 	public:
 		ger_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::length(stb)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::length(str)),
-		INCA(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::step(sta)),
-		INCB(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::step(stb)),
-		LDR(iterator_getter_by_src_v_type<STR, SI, 0, RA_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::length(stb)),
+		N(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::length(str)),
+		INCA(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::step(sta)),
+		INCB(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::step(stb)),
+		LDR(vd_iterator_getter<STR, RA, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -1151,8 +1124,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER>
-	struct ger_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, 1>
+	template <typename T, typename STR, typename STA, typename STB, typename RA, typename RB>
+	struct ger_loop<T, STR, STA, STB, RA, RB, 1>
 	{
 		const STR& str;
 		const STA& sta;
@@ -1168,11 +1141,11 @@ namespace tpp
 	public:
 		ger_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
-		M(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::length(sta)),
-		N(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::length(str)),
-		INCA(iterator_getter_by_src_v_type<STA, SI, 1, RA_V_TYPE>::template iterator_type<T>::step(sta)),
-		INCB(iterator_getter_by_src_v_type<STB, SI, 2, RB_V_TYPE>::template iterator_type<T>::step(stb)),
-		LDR(iterator_getter_by_src_v_type<STR, SI, 0, RB_V_TYPE>::template iterator_type<T>::step(str))
+		M(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::length(sta)),
+		N(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::length(str)),
+		INCA(vd_iterator_getter<STA, RA, 1>::template iterator_type<T>::step(sta)),
+		INCB(vd_iterator_getter<STB, RB, 2>::template iterator_type<T>::step(stb)),
+		LDR(vd_iterator_getter<STR, RB, 0>::template iterator_type<T>::step(str))
 		{}
 		void run(T *r, const T *a, const T *b)
 		{
@@ -1205,7 +1178,7 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI>
+	template <typename T, typename STR, typename STA, typename STB>
 	struct gem_common_loop
 	{
 		const STR& str;
@@ -1237,11 +1210,8 @@ namespace tpp
 		}
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename COMMON>
-	struct gem_sbmv_loop;
-
-	template <typename T, typename STR, typename STA, typename STB, typename SI, int V_TYPE, int C_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER>
-	struct gem_sbmv_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, 7, C_MASK, 7, IS_JOINABLE, JOIN_WITH, ORDER> >
+	template <typename T, typename STR, typename STA, typename STB, typename COMMON>
+	struct gem_sbmv_loop
 	{
 		const STR& str;
 		const STA& sta;
@@ -1253,9 +1223,9 @@ namespace tpp
 		BLAS_INTEGER INCR;
 		BLAS_INTEGER INCA;
 		BLAS_INTEGER INCB;
-		using rittype=typename iterator_getter_by_src_v_type<STR, SI, 0, V_TYPE>::template iterator_type<T>;
-		using aittype=typename iterator_getter_by_src_v_type<STA, SI, 1, V_TYPE>::template iterator_type<T>;
-		using bittype=typename iterator_getter_by_src_v_type<STB, SI, 2, V_TYPE>::template iterator_type<T>;
+		using rittype=typename vd_iterator_getter<STR, COMMON, 0>::template iterator_type<T>;
+		using aittype=typename vd_iterator_getter<STA, COMMON, 1>::template iterator_type<T>;
+		using bittype=typename vd_iterator_getter<STB, COMMON, 2>::template iterator_type<T>;
 	public:
 		gem_sbmv_loop(const STR& str, const STA& sta, const STB& stb, T alpha, T beta): str(str), sta(sta), stb(stb),
 		alpha(alpha),beta(beta),
@@ -1283,155 +1253,83 @@ namespace tpp
 		}
 	};
 
-
-
-	template <typename ELEMENT, typename VI, typename RES>
-	struct insert_mask;
-
-	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, int H_V_TYPE, int H_MASK, int H_C_MASK, int H_V_MASK, bool H_IS_JOINABLE, int H_JOIN_WITH, size_t H_ORDER, typename ... VI, typename ... RES>
-	struct insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>, type_pack<RES...> >:
-		public std::conditional<
-			(MASK==V_MASK && H_MASK!=H_V_MASK)?true:
-				(MASK!=V_MASK && H_MASK==H_V_MASK)?false:
-					(C_MASK > H_C_MASK)?true:
-						(C_MASK < H_C_MASK)?false:
-							(ORDER<H_ORDER),
-			type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER>, VI...>,
-			insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<VI...>, type_pack<RES..., valence_info<H_V_TYPE, H_MASK, H_C_MASK, H_V_MASK, H_IS_JOINABLE, H_JOIN_WITH, H_ORDER> > >
-		>::type
-	{
-	};
-
-	template <int V_TYPE, int MASK, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... RES>
-	struct insert_mask<valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<>, type_pack<RES...> >:
-		public type_pack<RES..., valence_info<V_TYPE, MASK, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER> >
-	{
-	};
-
-	template <typename T, typename STR, typename STA, typename STB, typename VISI, typename SPREAD, typename COMMON, typename RA, typename RB, typename AB, typename SUMA, typename SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
+	template <typename T, typename STR, typename STA, typename STB, typename SPREAD, typename SUMA, typename RA, typename SUMB, typename RB, typename AB, typename COMMON, bool R_CONT, bool A_CONT, bool B_CONT>
 	struct gem_sbmv_test;
+	template <typename T, typename STR, typename STA, typename STB, typename ... SPREAD, typename ... SUMA, typename ... RA, typename ... SUMB, typename ... RB, typename ... AB, typename ... COMMON, bool R_CONT, bool A_CONT, bool B_CONT>
+	struct gem_sbmv_test<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, R_CONT, A_CONT, B_CONT>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gem_common_loop<T, STR, STA, STB> >
+	{
+	};
+	template <typename T, typename STR, typename STA, typename STB, typename ... SPREAD, typename ... SUMA, typename ... RA, typename ... SUMB, typename ... RB, typename ... AB, int V_TYPE, int C_MASK, int NEXT_VALENCE, size_t ... POS, typename ... COMMON0, typename ... COMMON, bool R_CONT, bool A_CONT, bool B_CONT>
+	struct gem_sbmv_test<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<type_sequence<valence_data<V_TYPE, 7, C_MASK, 7, NEXT_VALENCE, POS...>, COMMON0...>, COMMON...>, R_CONT, A_CONT, B_CONT>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gem_sbmv_loop<T, STR, STA, STB, type_sequence<valence_data<V_TYPE, 7, C_MASK, 7, NEXT_VALENCE, POS...>, COMMON0...> > >
+	{
 
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_sbmv_test<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gem_common_loop<T, STR, STA, STB, SI> >
-	{
-	};
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, int V_TYPE, int C_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_sbmv_test<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<valence_info<V_TYPE, 7, C_MASK, 7, IS_JOINABLE, JOIN_WITH, ORDER>, COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gem_sbmv_loop<T, STR, STA, STB, SI, valence_info<V_TYPE, 7, C_MASK, 7, IS_JOINABLE, JOIN_WITH, ORDER> > >
-	{
-
 	};
 
-	template <typename T, typename STR, typename STA, typename STB, typename VISI, typename SPREAD, typename COMMON, typename RA, typename RB, typename AB, typename SUMA, typename SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask;
+	template <typename T, typename STR, typename STA, typename STB, typename VD, bool R_CONT, bool A_CONT, bool B_CONT>
+	struct gem_mask;
 
-//  SPREAD
-	template <typename T, typename STR, typename STA, typename STB, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_by_mask<T, STR, STA, STB, type_pack<type_pack<VI...>, SI>, typename insert_mask<valence_info<V_TYPE, 1, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SPREAD...>, type_pack<> >::type, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>
-	{
-	};
-//	COMMON
-	template <typename T, typename STR, typename STA, typename STB, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<valence_info<V_TYPE, 7, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_by_mask<T, STR, STA, STB, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, typename insert_mask<valence_info<V_TYPE, 7, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<COMMON...>, type_pack<> >::type, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>
-	{
-	};
-//  RA
-	template <typename T, typename STR, typename STA, typename STB, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_by_mask<T, STR, STA, STB, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, typename insert_mask<valence_info<V_TYPE, 3, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<RA...>, type_pack<> >::type, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT || ((V_MASK==3 && (C_MASK & 1))), A_CONT || ((V_MASK==3 && (C_MASK & 2))), B_CONT>
-	{
-	};
-//  RB
-	template <typename T, typename STR, typename STA, typename STB, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<valence_info<V_TYPE, 5, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_by_mask<T, STR, STA, STB, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, typename insert_mask<valence_info<V_TYPE, 5, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<RB...>, type_pack<> >::type, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT || ((V_MASK==5 && (C_MASK & 1))), A_CONT, B_CONT || ((V_MASK==5 && (C_MASK & 4)))>
-	{
-	};
-//  AB
-	template <typename T, typename STR, typename STA, typename STB, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<valence_info<V_TYPE, 6, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_by_mask<T, STR, STA, STB, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, typename insert_mask<valence_info<V_TYPE, 6, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<AB...>, type_pack<> >::type, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT || ((V_MASK==6 && (C_MASK & 2))), B_CONT || ((V_MASK==6 && (C_MASK & 4)))>
-	{
-	};
-//	SUMA
-	template <typename T, typename STR, typename STA, typename STB, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_by_mask<T, STR, STA, STB, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, typename insert_mask<valence_info<V_TYPE, 2, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SUMA...>, type_pack<> >::type, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>
-	{
-	};
-//	SUMB
-	template <typename T, typename STR, typename STA, typename STB, int V_TYPE, int C_MASK, int V_MASK, bool IS_JOINABLE, int JOIN_WITH, size_t ORDER, typename ... VI, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<valence_info<V_TYPE, 4, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_by_mask<T, STR, STA, STB, type_pack<type_pack<VI...>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, typename insert_mask<valence_info<V_TYPE, 4, C_MASK, V_MASK, IS_JOINABLE, JOIN_WITH, ORDER>, type_pack<SUMB...>, type_pack<> >::type, R_CONT, A_CONT, B_CONT>
-	{
-	};
 //	DONE GEMM
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, typename ... RA, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, typename ... RB, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER, typename ... AB, typename ... SUMA, typename ... SUMB>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...>, true, true, true>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gemm_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, (RA_C_MASK & 1) + (AB_C_MASK & 2) + (RB_C_MASK & 4) > >
-//		public gemm_final<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...>, (RA_C_MASK & 1) + (AB_C_MASK & 2) + (RB_C_MASK & 4) >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, int RA_V_TYPE, int RA_C_MASK, int RA_NEXT_VALENCE, size_t ... RA_POS, typename ... RA0, typename ... RA, typename ... SUMB, int RB_V_TYPE, int RB_C_MASK, int RB_NEXT_VALENCE, size_t ... RB_POS, typename ... RB0, typename ... RB, int AB_V_TYPE, int AB_C_MASK, int AB_NEXT_VALENCE, size_t ... AB_POS, typename ... AB0, typename ... AB, typename ... COMMON>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>,RA...>, type_sequence<SUMB...>, type_sequence<type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, RB...>, type_sequence<type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, AB...>, type_sequence<COMMON...> >, true, true, true>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gemm_loop<T, STR, STA, STB, type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>, type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, (RA_C_MASK & 1) + (AB_C_MASK & 2) + (RB_C_MASK & 4) > >
 	{
 	};
 //	DONE GEMV A(B)
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, typename ... RA, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, typename ... RB, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, true, B_CONT>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gemvA_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, (AB_C_MASK & 2) > >
-//		public gemvA<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...> >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, int RA_V_TYPE, int RA_C_MASK, int RA_NEXT_VALENCE, size_t ... RA_POS, typename ... RA0, typename ... RA, typename ... SUMB, int RB_V_TYPE, int RB_C_MASK, int RB_NEXT_VALENCE, size_t ... RB_POS, typename ... RB0, typename ... RB, int AB_V_TYPE, int AB_C_MASK, int AB_NEXT_VALENCE, size_t ... AB_POS, typename ... AB0, typename ... AB, typename ... COMMON, bool R_CONT, bool B_CONT>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>,RA...>, type_sequence<SUMB...>, type_sequence<type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, RB...>, type_sequence<type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, AB...>, type_sequence<COMMON...> >, R_CONT, true, B_CONT>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gemvA_loop<T, STR, STA, STB, type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>, type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, (AB_C_MASK & 2) > >
 	{
 	};
 //  DONE GEMV A
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, typename ... RA, typename ... RB, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, true, B_CONT>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gemvA_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, (AB_C_MASK & 2) > >
-//		public gemvA<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...> >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, int RA_V_TYPE, int RA_C_MASK, int RA_NEXT_VALENCE, size_t ... RA_POS, typename ... RA0, typename ... RA, typename ... SUMB, typename ... RB, int AB_V_TYPE, int AB_C_MASK, int AB_NEXT_VALENCE, size_t ... AB_POS, typename ... AB0, typename ... AB, typename ... COMMON, bool R_CONT, bool B_CONT>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>,RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, AB...>, type_sequence<COMMON...> >, R_CONT, true, B_CONT>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gemvA_loop<T, STR, STA, STB, type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>, type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, (AB_C_MASK & 2) > >
 	{
 	};
 
 //	DONE GEMV B
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, typename ... RB, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, true>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gemvB_loop<T, STR, STA, STB, SI, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, (RB_C_MASK & 4) > >
-//		public gemvB<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...> >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, typename ... RA, typename ... SUMB, int RB_V_TYPE, int RB_C_MASK, int RB_NEXT_VALENCE, size_t ... RB_POS, typename ... RB0, typename ... RB, int AB_V_TYPE, int AB_C_MASK, int AB_NEXT_VALENCE, size_t ... AB_POS, typename ... AB0, typename ... AB, typename ... COMMON, bool R_CONT, bool A_CONT>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, RB...>, type_sequence<type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, AB...>, type_sequence<COMMON...> >, R_CONT, A_CONT, true>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gemvB_loop<T, STR, STA, STB, type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, (RB_C_MASK & 4) > >
 	{
 	};
 
 //	DONE DOT
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, typename ... RA, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, typename ... RB, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gem_dot_loop<T, STR, STA, STB, SI, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER> > >
-//		public dot_final<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...> >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, int RA_V_TYPE, int RA_C_MASK, int RA_NEXT_VALENCE, size_t ... RA_POS, typename ... RA0, typename ... RA, typename ... SUMB, int RB_V_TYPE, int RB_C_MASK, int RB_NEXT_VALENCE, size_t ... RB_POS, typename ... RB0, typename ... RB, int AB_V_TYPE, int AB_C_MASK, int AB_NEXT_VALENCE, size_t ... AB_POS, typename ... AB0, typename ... AB, typename ... COMMON, bool R_CONT, bool A_CONT, bool B_CONT>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>,RA...>, type_sequence<SUMB...>, type_sequence<type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, RB...>, type_sequence<type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, AB...>, type_sequence<COMMON...> >, R_CONT, A_CONT, B_CONT>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>,RA...>, type_sequence<SUMB...>, type_sequence<type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gem_dot_loop<T, STR, STA, STB, type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...> > >
 	{
 	};
 
 //	DONE DOT
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, int AB_V_TYPE, int AB_C_MASK, bool AB_IS_JOINABLE, int AB_JOIN_WITH, size_t AB_ORDER, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, gem_dot_loop<T, STR, STA, STB, SI, valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER> > >
-//		public dot_final<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<valence_info<AB_V_TYPE, 6, AB_C_MASK, 6, AB_IS_JOINABLE, AB_JOIN_WITH, AB_ORDER>, AB...>, type_pack<SUMA...>, type_pack<SUMB...> >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, typename ... RA, typename ... SUMB, typename ... RB, int AB_V_TYPE, int AB_C_MASK, int AB_NEXT_VALENCE, size_t ... AB_POS, typename ... AB0, typename ... AB, typename ... COMMON, bool R_CONT, bool A_CONT, bool B_CONT>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...>, AB...>, type_sequence<COMMON...> >, R_CONT, A_CONT, B_CONT>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, gem_dot_loop<T, STR, STA, STB, type_sequence<valence_data<AB_V_TYPE, 6, AB_C_MASK, 6, AB_NEXT_VALENCE, AB_POS...>, AB0...> > >
 	{
 	};
 
 //	DONE GER
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, int RA_V_TYPE, int RA_C_MASK, bool RA_IS_JOINABLE, int RA_JOIN_WITH, size_t RA_ORDER, typename ... RA, int RB_V_TYPE, int RB_C_MASK, bool RB_IS_JOINABLE, int RB_JOIN_WITH, size_t RB_ORDER, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, true, A_CONT, B_CONT>:
-		public gem_create_general_loop<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, ger_loop<T, STR, STA, STB, SI, valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, (RA_C_MASK & 1) > >
-//		public ger_final<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<valence_info<RA_V_TYPE, 3, RA_C_MASK, 3, RA_IS_JOINABLE, RA_JOIN_WITH, RA_ORDER>, RA...>, type_pack<valence_info<RB_V_TYPE, 5, RB_C_MASK, 5, RB_IS_JOINABLE, RB_JOIN_WITH, RB_ORDER>, RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...> >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, int RA_V_TYPE, int RA_C_MASK, int RA_NEXT_VALENCE, size_t ... RA_POS, typename ... RA0, typename ... RA, typename ... SUMB, int RB_V_TYPE, int RB_C_MASK, int RB_NEXT_VALENCE, size_t ... RB_POS, typename ... RB0, typename ... RB, typename ... AB, typename ... COMMON, bool A_CONT, bool B_CONT>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>,RA...>, type_sequence<SUMB...>, type_sequence<type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, RB...>, type_sequence<AB...>, type_sequence<COMMON...> >, true, A_CONT, B_CONT>:
+		public gem_create_general_loop<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, ger_loop<T, STR, STA, STB, type_sequence<valence_data<RA_V_TYPE, 3, RA_C_MASK, 3, RA_NEXT_VALENCE, RA_POS...>, RA0...>, type_sequence<valence_data<RB_V_TYPE, 5, RB_C_MASK, 5, RB_NEXT_VALENCE, RB_POS...>, RB0...>, (RA_C_MASK & 1) > >
 	{
 	};
 
 //	DONE COMMON OR SBMV
-	template <typename T, typename STR, typename STA, typename STB, typename SI, typename ... SPREAD, typename ... COMMON, typename ... RA, typename ... RB, typename ... AB, typename ... SUMA, typename ... SUMB, bool R_CONT, bool A_CONT, bool B_CONT>
-	struct gem_by_mask<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>:
-		public gem_sbmv_test<T, STR, STA, STB, type_pack<type_pack<>, SI>, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...>, R_CONT, A_CONT, B_CONT>
-//		public common_final<T, STR, STA, STB, SI, type_pack<SPREAD...>, type_pack<COMMON...>, type_pack<RA...>, type_pack<RB...>, type_pack<AB...>, type_pack<SUMA...>, type_pack<SUMB...> >
+	template <typename T, typename STR, typename STA, typename STB, typename CONT_MASK, typename ... SPREAD, typename ... SUMA, typename ... RA, typename ... SUMB, typename ... RB, typename ... AB, typename ... COMMON, bool R_CONT, bool A_CONT, bool B_CONT>
+	struct gem_mask<T, STR, STA, STB, type_sequence<CONT_MASK, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...> >, R_CONT, A_CONT, B_CONT>:
+		public gem_sbmv_test<T, STR, STA, STB, type_sequence<SPREAD...>, type_sequence<SUMA...>, type_sequence<RA...>, type_sequence<SUMB...>, type_sequence<RB...>, type_sequence<AB...>, type_sequence<COMMON...>, R_CONT, A_CONT, B_CONT>
 	{
 	};
 
-	template <typename T, typename STR, typename STA, typename STB>
-	struct gem_runner: public gem_by_mask<T, STR, STA, STB, typename make_valence_info_and_join<STR, STA, STB>::type, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, type_pack<>, false, false, false>
+	template <typename T, typename STR, typename STA, typename STB, typename VD>
+	struct gem_runner;
+
+	template <typename T, typename STR, typename STA, typename STB, int CONT_MASK, typename ... VD>
+	struct gem_runner<T, STR, STA, STB, type_sequence<std::integral_constant<int, CONT_MASK>, VD...> >:
+		public gem_mask<T, STR, STA, STB, type_sequence<std::integral_constant<int, CONT_MASK>, VD...>, (CONT_MASK & 1)==1, (CONT_MASK & 2)==2, (CONT_MASK & 4)==4>
 	{
 	};
 

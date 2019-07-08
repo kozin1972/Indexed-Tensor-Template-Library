@@ -74,7 +74,7 @@ namespace tpp
 		char *incompatible(unsigned long long p0, int s0, unsigned long long p1, int s1, int v_type, unsigned long long length0, unsigned long long length1) noexcept
 		{
 			static char s[200];
-			sprintf(s,"Incompatible shapes error. Shapes #%llu of tensor #%d and #%llu of tensor #%d have the same valence type #%d and different lengths: %llu and %llu",p0,s0,p1,s1,v_type,length0,length1);
+			sprintf(s,"Incompatible dimensions error. Dimension #%llu of tensor #%d and #%llu of tensor #%d have the same valence type #%d and different lengths: %llu and %llu",p0,s0,p1,s1,v_type,length0,length1);
 			return s;
 		}
 	public:
@@ -303,7 +303,6 @@ namespace tpp
 		inline segment(size_t l, size_t s) { this->l=l; this->s=s; }
 		inline size_t length() const noexcept { return l; }
 		inline size_t step() const noexcept { return s; }
-//		inline void clear() noexcept { l=0; }
 		template <typename T>
 		inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) noexcept
 		{
@@ -493,7 +492,6 @@ namespace tpp
 		inline forward(size_t l, size_t s) { this->l=l; this->s=s; }
 		inline size_t length() const noexcept { return l; }
 		inline size_t step() const noexcept { return s; }
-//		inline void clear() noexcept { l=0; }
 		template <typename T>
 		inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) noexcept
 		{
@@ -834,20 +832,12 @@ namespace tpp
 			template <int, enum dSU, size_t, size_t> friend class container<CONTAINER>::shape;
 		public:
 			template <typename PARENT_SHAPE>
-			inline shape(const index<V_TYPE>& i, const PARENT_SHAPE& p) noexcept(
-							noexcept(so.cont.begin())
-							&& noexcept(typename CONTAINER::iterator(so.cont.begin()))): so(i.sc()), start_it(so.cont.begin()) {}
+			inline shape(const index<V_TYPE>& i, const PARENT_SHAPE& p): so(i.sc()), start_it(so.cont.begin()) {}
 			template <int OLD_V_TYPE>
-			inline shape(const shape<OLD_V_TYPE, USAGE, USE_ALSO,PARENT>& src) noexcept(
-							noexcept(typename CONTAINER::iterator(src.start_it))): so(src.so), start_it(src.start_it) {}
+			inline shape(const shape<OLD_V_TYPE, USAGE, USE_ALSO,PARENT>& src): so(src.so), start_it(src.start_it) {}
 			size_t length() const { return this->so.cont.size(); }
 			template <typename T>
-			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) noexcept(
-					noexcept(CONTAINER::iterator(start_it))
-				&& noexcept(start_it--)
-				&& noexcept(start_it++)
-				&& noexcept(start_it.operator *())
-			)
+			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o)
 			{
 				typename CONTAINER::iterator bit=this->start_it;
 				if (o<0)
@@ -857,12 +847,7 @@ namespace tpp
 				return (*(start_it)-*bit);
 			}
 			template <typename T>
-			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) const noexcept(
-					noexcept(typename CONTAINER::iterator(start_it))
-				&& noexcept(start_it--)
-				&& noexcept(start_it++)
-				&& noexcept(start_it.operator *())
-			)
+			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) const
 			{
 				typename CONTAINER::iterator bit=this->start_it;
 				if (o<0)
@@ -878,22 +863,10 @@ namespace tpp
 				typename CONTAINER::iterator end;
 				size_t o;
 			public:
-				inline iterator(const shape& i, const T * const p) noexcept(
-						noexcept(typename CONTAINER::iterator(i.so.cont.begin()))
-						&& noexcept(it.operator *())
-						): it(i.so.cont.begin()), end(i.so.cont.end()), o(*it) {}
-				inline ptrdiff_t move_one(T *&p) noexcept(
-						noexcept(++it)
-						&& noexcept(it.operator *())
-						) { ptrdiff_t d=*(++it)-o; o+=d; return d; }
-				inline ptrdiff_t move_one(const T *&p) noexcept(
-						noexcept(++it)
-						&& noexcept(it.operator *())
-						) { ptrdiff_t d=*(++it)-o; o+=d; return d; }
-				inline ptrdiff_t move(T *&p, ptrdiff_t shift) noexcept(
-						noexcept(std::advance(it,shift))
-						&& noexcept(it.operator *())
-						)
+				inline iterator(const shape& i, const T * const p) : it(i.so.cont.begin()), end(i.so.cont.end()), o(*it) {}
+				inline ptrdiff_t move_one(T *&p) { ptrdiff_t d=*(++it)-o; o+=d; return d; }
+				inline ptrdiff_t move_one(const T *&p) { ptrdiff_t d=*(++it)-o; o+=d; return d; }
+				inline ptrdiff_t move(T *&p, ptrdiff_t shift)
 				{
 					ptrdiff_t n;
 					std::advance(it,shift);
@@ -901,10 +874,7 @@ namespace tpp
 					o+=d;
 					return d;
 				}
-				inline ptrdiff_t move(const T *&p, ptrdiff_t shift) noexcept(
-						noexcept(std::advance(it,shift))
-						&& noexcept(it.operator *())
-						)
+				inline ptrdiff_t move(const T *&p, ptrdiff_t shift)
 				{
 					ptrdiff_t n;
 					std::advance(it,shift);
@@ -926,28 +896,14 @@ namespace tpp
 			template <int, enum dSU, size_t, size_t> friend class container<CONTAINER>::shape;
 		public:
 			template <int P_V_TYPE, enum dSU P_USAGE>
-			inline shape(const index<V_TYPE>& i, const segment<P_V_TYPE, P_USAGE, 0, 0>& p) noexcept(
-							noexcept(p.step())
-							&& noexcept(so.cont.begin())
-							&& noexcept(typename CONTAINER::iterator(so.cont.begin()))): so(i.sc()), s(p.step()), start_it(so.cont.begin()) {}
+			inline shape(const index<V_TYPE>& i, const segment<P_V_TYPE, P_USAGE, 0, 0>& p): so(i.sc()), s(p.step()), start_it(so.cont.begin()) {}
 			template <int P_V_TYPE, enum dSU P_USAGE, size_t P_USE_ALSO, size_t P_PARENT>
-			inline shape(const defaultIndex<V_TYPE>& i, const shape<P_V_TYPE, P_USAGE, P_USE_ALSO, P_PARENT>& p) noexcept(
-					noexcept(so.cont.begin())
-					&& noexcept(typename CONTAINER::iterator(so.cont.begin()))
-					): so(p.so), s(p.s), start_it(so.cont.begin()) {}
+			inline shape(const defaultIndex<V_TYPE>& i, const shape<P_V_TYPE, P_USAGE, P_USE_ALSO, P_PARENT>& p): so(p.so), s(p.s), start_it(so.cont.begin()) {}
 			template <int OLD_V_TYPE>
-			inline shape(const shape<OLD_V_TYPE, USAGE, USE_ALSO,0>& src) noexcept(
-					noexcept(shared_container<CONTAINER>(src.so))
-					&& noexcept(typename CONTAINER::iterator(src.start_it))
-					): so(src.so), s(src.s), start_it(src.start_it) {}
+			inline shape(const shape<OLD_V_TYPE, USAGE, USE_ALSO,0>& src): so(src.so), s(src.s), start_it(src.start_it) {}
 			size_t length() const noexcept(noexcept(so.cont.size())) { return this->so.cont.size(); }
 			template <typename T>
-			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) noexcept(
-					noexcept(typename CONTAINER::iterator(start_it))
-				&& noexcept(start_it--)
-				&& noexcept(start_it++)
-				&& noexcept(start_it.operator *())
-			)
+			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o)
 			{
 				typename CONTAINER::iterator bit=this->start_it;
 				if (o<0)
@@ -958,12 +914,7 @@ namespace tpp
 				return (*(start_it)-*bit);
 			}
 			template <typename T>
-			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) const noexcept(
-					noexcept(typename CONTAINER::iterator(start_it))
-				&& noexcept(start_it--)
-				&& noexcept(start_it++)
-				&& noexcept(start_it.operator *())
-			)
+			inline ptrdiff_t apply_numeric_index(T *&p, ptrdiff_t o) const
 			{
 				typename CONTAINER::iterator bit=this->start_it;
 				if (o<0)
@@ -981,23 +932,10 @@ namespace tpp
 				size_t s;
 				size_t o;
 			public:
-				inline iterator(const shape& i, const T * const p) noexcept(
-						noexcept(typename CONTAINER::iterator(i.start_it))
-						&& noexcept(typename CONTAINER::iterator(i.so.cont.end()))
-						&& noexcept(it.operator *())
-						): it(i.start_it), end(i.so.cont.end()), s(i.s), o(*it) {}
-				inline void move_one(T *&p) noexcept(
-						noexcept(++it)
-						&& noexcept(it.operator *())
-						) { ++it; if (it==end) return; size_t n=*it; p+=(n-o)*s; o=n; }
-				inline void move_one(const T *&p) noexcept(
-						noexcept(++it)
-						&& noexcept(it.operator *())
-						) { ++it; if (it==end) return; size_t n=*it; p+=(n-o)*s; o=n; }
-				inline void move(T *&p, ptrdiff_t shift) noexcept(
-						noexcept(std::advance(it,shift))
-						&& noexcept(it.operator *())
-						)
+				inline iterator(const shape& i, const T * const p): it(i.start_it), end(i.so.cont.end()), s(i.s), o(*it) {}
+				inline void move_one(T *&p) { ++it; if (it==end) return; size_t n=*it; p+=(n-o)*s; o=n; }
+				inline void move_one(const T *&p) { ++it; if (it==end) return; size_t n=*it; p+=(n-o)*s; o=n; }
+				inline void move(T *&p, ptrdiff_t shift)
 				{
 					ptrdiff_t n;
 					std::advance(it,shift);
@@ -1005,10 +943,7 @@ namespace tpp
 					p+=(n-o)*s;
 					o=n;
 				}
-				inline void move(const T *&p, ptrdiff_t shift) noexcept(
-						noexcept(std::advance(it,shift))
-						&& noexcept(it.operator *())
-						)
+				inline void move(const T *&p, ptrdiff_t shift)
 				{
 					ptrdiff_t n;
 					std::advance(it,shift);
@@ -1036,24 +971,10 @@ namespace tpp
 			inline index(const shared_container<CONTAINER>& so, ptrdiff_t offset) noexcept: shared_container<CONTAINER>(so), o(offset) {}
 			template <int V_TYPE_SRC>
 			inline index(const index<V_TYPE_SRC>& i, ptrdiff_t offset) noexcept: shared_container<CONTAINER>(i.sc()), o(i.o+offset) {}
-			inline size_t first() const noexcept(
-					noexcept(shared_container<CONTAINER>::cont.size())
-					&& noexcept(shared_container<CONTAINER>::cont.begin())
-					&& noexcept(shared_container<CONTAINER>::cont.begin().operator*())
-					){ return this->cont.size()==0?o:*(this->cont.begin())+o; }
+			inline size_t first() const { return this->cont.size()==0?o:*(this->cont.begin())+o; }
 			inline ptrdiff_t offset() const noexcept { return o; }
-			inline size_t min_element() const noexcept(
-					noexcept(shared_container<CONTAINER>::cont.begin())
-					&& noexcept(shared_container<CONTAINER>::cont.end())
-					&& noexcept(std::min_element(shared_container<CONTAINER>::cont.begin(),shared_container<CONTAINER>::cont.end()))
-					&& noexcept(std::min_element(shared_container<CONTAINER>::cont.begin(),shared_container<CONTAINER>::cont.end()).operator*())
-					) { return o+(this->cont.begin()==this->cont.end()?0:*(std::min_element(this->cont.begin(),this->cont.end()))); }
-			inline size_t max_element() const noexcept(
-					noexcept(shared_container<CONTAINER>::cont.begin())
-					&& noexcept(shared_container<CONTAINER>::cont.end())
-					&& noexcept(std::max_element(shared_container<CONTAINER>::cont.begin(),shared_container<CONTAINER>::cont.end()))
-					&& noexcept(std::max_element(shared_container<CONTAINER>::cont.begin(),shared_container<CONTAINER>::cont.end()).operator*())
-					) { return o+(this->cont.begin()==this->cont.end()?0:*(std::max_element(this->cont.begin(),this->cont.end()))); }
+			inline size_t min_element() const { return o+(this->cont.begin()==this->cont.end()?0:*(std::min_element(this->cont.begin(),this->cont.end()))); }
+			inline size_t max_element() const { return o+(this->cont.begin()==this->cont.end()?0:*(std::max_element(this->cont.begin(),this->cont.end()))); }
 			inline const shared_container<CONTAINER>& sc() const noexcept { return *this; }
 			inline index operator+(ptrdiff_t offset) const noexcept { return index(*this,offset); }
 			inline index operator-(ptrdiff_t offset) const noexcept { return index(*this,-offset); }
@@ -1075,7 +996,7 @@ namespace tpp
 			};
 		};
 	};
-#define DECLARE_containerIndex(I,cont,offset) tpp::container<typename std::remove_reference<decltype(cont)>::type::base_container_type>::index<__COUNTER__> I(cont,offset);
+#define DECLARE_containerIndex(I,cont,offset) typename tpp::container<typename std::remove_reference<decltype(cont)>::type::base_container_type>::template index<__COUNTER__> I(cont,offset);
 
 	template<template <int> class indexClass>
 	struct index_creator
@@ -1108,6 +1029,7 @@ namespace tpp
 		static const bool need_glue=false;
 		static const bool full_segment=false;
 		static const int v_type=V_TYPE;
+		static const enum dSU usage=USAGE;
 	};
 
 	template <template <int, enum dSU, size_t, size_t> class shapeClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO>
@@ -1117,6 +1039,7 @@ namespace tpp
 		static const bool need_glue=false;
 		static const bool full_segment=false;
 		static const int v_type=V_TYPE;
+		static const enum dSU usage=USAGE;
 	};
 
 	template <int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT>
@@ -1126,6 +1049,7 @@ namespace tpp
 		static const bool need_glue=false;
 		static const bool full_segment=false;
 		static const int v_type=V_TYPE;
+		static const enum dSU usage=USAGE;
 	};
 
 	template <int V_TYPE, enum dSU USAGE, size_t USE_ALSO>
@@ -1135,6 +1059,7 @@ namespace tpp
 		static const bool need_glue=true;
 		static const bool full_segment=false;
 		static const int v_type=V_TYPE;
+		static const enum dSU usage=USAGE;
 	};
 
 	template <int V_TYPE, size_t USE_ALSO>
@@ -1144,6 +1069,7 @@ namespace tpp
 		static const bool need_glue=true;
 		static const bool full_segment=true;
 		static const int v_type=V_TYPE;
+		static const enum dSU usage=USAGE_FULL;
 	};
 };
 
