@@ -37,14 +37,14 @@ print 'Processing Integer arrays. Not allowed. Exception should be raised:'
 try:
   l1.BR_solve(xi,UTi,vi)
 except Exception, e:
-    print 'Exception catched: '+ str(e)  
+    print 'Exception catched successfully: '+ str(e)  
 else:
     print 'Failed to catch an exception'
 print 'Passing different types. Not allowed. Exception should be raised:'
 try:
   l1.BR_solve(x,UN,vf)
 except Exception, e:
-    print 'Exception catched: '+ str(e)  
+    print 'Exception catched successfully: '+ str(e)  
 else:
     print 'Failed to catch an exception'
 print 'Passing matrix instead of vector. Not allowed. Exception should be raised:'
@@ -52,7 +52,7 @@ m=np.empty((2,2))
 try:
   l1.BR_solve(x,UN,m)
 except Exception, e:
-    print 'Exception catched: '+ str(e)  
+    print 'Exception catched successfully: '+ str(e)  
 else:
     print 'Failed to catch an exception'
 print 'Passing too long output vector. Not allowed. Exception should be raised:'
@@ -60,7 +60,7 @@ v5=np.empty(5)
 try:
   l1.BR_solve(x,UN,v5)
 except Exception, e:
-    print 'Exception catched: '+ str(e)  
+    print 'Exception catched successfully: '+ str(e)  
 else:
     print 'Failed to catch an exception'
 print 'Passing arrays of incompatible sizes. Not allowed. Exception should be raised:'
@@ -68,7 +68,7 @@ v2=np.empty(2)
 try:
   l1.BR_solve(x,UN,v2)
 except Exception, e:
-    print 'Exception catched: '+ str(e)  
+    print 'Exception catched successfully: '+ str(e)  
 else:
     print 'Failed to catch an exception'
 
