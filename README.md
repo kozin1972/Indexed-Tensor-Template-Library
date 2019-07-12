@@ -1,7 +1,7 @@
 
                                      Indexed Tensor Template Library
 
-Indexed Tensor Template Library is driven by indices and based on BLAS. It works at compile time.
+Indexed Tensor Template Library is driven by indices and based on BLAS. It works at compile time. Procedures made with Tensor Indexed Template Library can be used for Python extensions. See iTTL.docx for details.
 
 Examples:
 
