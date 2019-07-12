@@ -12,7 +12,7 @@
 
 #include <stuple.h>
 
-namespace tpp
+namespace iTTL
 {
 
 	template <typename T, typename ST, size_t ... POS>
@@ -245,12 +245,12 @@ namespace tpp
 	template <int SRC0, int SRC1, size_t POS0, size_t POS1, size_t SNUM_0, size_t CONT_0, bool IS_INDEXED_0, typename OST_0, typename ... SHAPES_0, size_t SNUM_1, size_t CONT_1, bool IS_INDEXED_1, typename OST_1, typename ... SHAPES_1>
 	void report_incompatible_shapes(const stuple<SNUM_0, CONT_0, IS_INDEXED_0, OST_0, SHAPES_0...>& st0, const stuple<SNUM_1, CONT_1, IS_INDEXED_1, OST_1, SHAPES_1...>& st1)
 	{
-//		static const size_t inum0=tpp::index_number(std::integral_constant<size_t, POS0>{}, type_sequence<SHAPES_0...>{});
-//		static const size_t inum1=tpp::index_number(std::integral_constant<size_t, POS1>{}, type_sequence<SHAPES_1...>{});
-		static const size_t inum0=tpp::index_number<POS0, SHAPES_0...>::inum;
-		static const size_t inum1=tpp::index_number<POS1, SHAPES_1...>::inum;
-		static const int v_type=check_shape<tpp::tseq_element<POS0, type_sequence<SHAPES_0...> > >::v_type;
-		throw incompatibleIndices(inum0, SRC0, inum1, SRC1, v_type, tpp::get<POS0>(st0).length(), tpp::get<POS1>(st1).length());
+//		static const size_t inum0=iTTL::index_number(std::integral_constant<size_t, POS0>{}, type_sequence<SHAPES_0...>{});
+//		static const size_t inum1=iTTL::index_number(std::integral_constant<size_t, POS1>{}, type_sequence<SHAPES_1...>{});
+		static const size_t inum0=iTTL::index_number<POS0, SHAPES_0...>::inum;
+		static const size_t inum1=iTTL::index_number<POS1, SHAPES_1...>::inum;
+		static const int v_type=check_shape<iTTL::tseq_element<POS0, type_sequence<SHAPES_0...> > >::v_type;
+		throw incompatibleIndices(inum0, SRC0, inum1, SRC1, v_type, iTTL::get<POS0>(st0).length(), iTTL::get<POS1>(st1).length());
 	}
 
 	template <int SRC0, int SRC1, size_t SNUM_0, size_t CONT_0, bool IS_INDEXED_0, typename OST_0, typename ... SHAPES_0, size_t SNUM_1, size_t CONT_1, bool IS_INDEXED_1, typename OST_1, typename ... SHAPES_1>
@@ -261,7 +261,7 @@ namespace tpp
 	template <int SRC0, int SRC1, typename VDH, typename ... VDT, size_t SNUM_0, size_t CONT_0, bool IS_INDEXED_0, typename OST_0, typename ... SHAPES_0, size_t SNUM_1, size_t CONT_1, bool IS_INDEXED_1, typename OST_1, typename ... SHAPES_1>
 	void check_shape_length_01(type_sequence<VDH, VDT...>, const stuple<SNUM_0, CONT_0, IS_INDEXED_0, OST_0, SHAPES_0...>& st0, const stuple<SNUM_1, CONT_1, IS_INDEXED_1, OST_1, SHAPES_1...>& st1)
 	{
-		if (tpp::get<VDH::pos0>(st0).length()!=tpp::get<VDH::pos1>(st1).length())
+		if (iTTL::get<VDH::pos0>(st0).length()!=iTTL::get<VDH::pos1>(st1).length())
 			report_incompatible_shapes<SRC0, SRC1, VDH::pos0, VDH::pos1>(st0, st1);
 		check_shape_length_01<SRC0, SRC1>(type_sequence<VDT...>{}, st0, st1);
 	}
@@ -274,7 +274,7 @@ namespace tpp
 	template <typename VDH, typename ... VDT, size_t SNUM_0, size_t CONT_0, bool IS_INDEXED_0, typename OST_0, typename ... SHAPES_0, size_t SNUM_1, size_t CONT_1, bool IS_INDEXED_1, typename OST_1, typename ... SHAPES_1>
 	void check_shape_length_12(type_sequence<VDH, VDT...>, const stuple<SNUM_0, CONT_0, IS_INDEXED_0, OST_0, SHAPES_0...>& st0, const stuple<SNUM_1, CONT_1, IS_INDEXED_1, OST_1, SHAPES_1...>& st1)
 	{
-		if (tpp::get<VDH::pos1>(st0).length()!=tpp::get<VDH::pos2>(st1).length())
+		if (iTTL::get<VDH::pos1>(st0).length()!=iTTL::get<VDH::pos2>(st1).length())
 			report_incompatible_shapes<1, 2, VDH::pos1, VDH::pos2>(st0, st1);
 		check_shape_length_12(type_sequence<VDT...>{}, st0, st1);
 	}
@@ -420,26 +420,26 @@ namespace tpp
 	struct get_index_order_base;
 
 	template <int ... IO, int ... VO, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct get_index_order_base<tpp::integer_sequence<int, IO...>, tpp::integer_sequence<int, VO...>, type_sequence<sClass<V_TYPE, USAGE, USE_ALSO,PARENT>, SHAPES...> >:
-		public get_index_order_base<tpp::integer_sequence<int, IO..., find<int, V_TYPE>(integer_sequence<int,VO...>{})>, tpp::integer_sequence<int, VO...>, type_sequence<SHAPES...> >
+	struct get_index_order_base<iTTL::integer_sequence<int, IO...>, iTTL::integer_sequence<int, VO...>, type_sequence<sClass<V_TYPE, USAGE, USE_ALSO,PARENT>, SHAPES...> >:
+		public get_index_order_base<iTTL::integer_sequence<int, IO..., find<int, V_TYPE>(integer_sequence<int,VO...>{})>, iTTL::integer_sequence<int, VO...>, type_sequence<SHAPES...> >
 	{
 		static_assert(find<int, V_TYPE>(integer_sequence<int, VO...>{})<sizeof...(VO),"Tensor valence is not found in the list of valences");
 	};
 
 	template <int ... IO, int ... VO, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct get_index_order_base<tpp::integer_sequence<int, IO...>, tpp::integer_sequence<int, VO...>, type_sequence<sClass<V_TYPE, USAGE_SLAVE, USE_ALSO,PARENT>, SHAPES...> >:
-		public get_index_order_base<tpp::integer_sequence<int, IO...>, tpp::integer_sequence<int, VO...>, type_sequence<SHAPES...> >
+	struct get_index_order_base<iTTL::integer_sequence<int, IO...>, iTTL::integer_sequence<int, VO...>, type_sequence<sClass<V_TYPE, USAGE_SLAVE, USE_ALSO,PARENT>, SHAPES...> >:
+		public get_index_order_base<iTTL::integer_sequence<int, IO...>, iTTL::integer_sequence<int, VO...>, type_sequence<SHAPES...> >
 	{
 	};
 
 	template <int ... IO, typename VO>
-	struct get_index_order_base<tpp::integer_sequence<int, IO...>, VO, type_sequence<> >
+	struct get_index_order_base<iTTL::integer_sequence<int, IO...>, VO, type_sequence<> >
 	{
-		typedef tpp::integer_sequence<int, IO...> type;
+		typedef iTTL::integer_sequence<int, IO...> type;
 	};
 
 	template <typename VO, typename SHAPES>
-	struct get_index_order: public get_index_order_base<tpp::integer_sequence<int>, VO, SHAPES>
+	struct get_index_order: public get_index_order_base<iTTL::integer_sequence<int>, VO, SHAPES>
 	{
 	};
 
@@ -447,10 +447,10 @@ namespace tpp
 	struct get_ordered_tuple_base;
 
 	template <typename ... OT, int FIRST, int ... INDEX_ORDER, typename INDT>
-	struct get_ordered_tuple_base<std::tuple<OT...>, tpp::integer_sequence<int, FIRST, INDEX_ORDER...>, INDT>
+	struct get_ordered_tuple_base<std::tuple<OT...>, iTTL::integer_sequence<int, FIRST, INDEX_ORDER...>, INDT>
 	{
 		typedef typename std::tuple_element<FIRST,INDT>::type element_type;
-		typedef get_ordered_tuple_base<std::tuple<OT..., element_type>, tpp::integer_sequence<int, INDEX_ORDER...>, INDT> base;
+		typedef get_ordered_tuple_base<std::tuple<OT..., element_type>, iTTL::integer_sequence<int, INDEX_ORDER...>, INDT> base;
 		typedef typename base::type type;
 		template <typename ... Ts>
 		static type create_tuple(const INDT& src, Ts ... args) { return base::create_tuple(src, args..., std::get<FIRST>(src)); }
@@ -459,7 +459,7 @@ namespace tpp
 	};
 
 	template <typename ... OT, typename INDT>
-	struct get_ordered_tuple_base<std::tuple<OT...>, tpp::integer_sequence<int>, INDT>
+	struct get_ordered_tuple_base<std::tuple<OT...>, iTTL::integer_sequence<int>, INDT>
 	{
 		typedef std::tuple<OT...> type;
 		template <typename ... Ts>

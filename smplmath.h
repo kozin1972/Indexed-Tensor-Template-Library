@@ -13,7 +13,7 @@
 #include <math.h>
 //#include <cstdlib>
 
-namespace tpp
+namespace iTTL
 {
 	template <typename T>
 	inline T sign(T v) noexcept
@@ -29,12 +29,22 @@ namespace tpp
 	{
 		return ::sqrt(v);
 	}
+	template<>
+	inline float sqrt<float>(float v)
+	{
+		return ::sqrt(v);
+	}
 
 	template <typename T>
 	T log(T v);
 
 	template<>
 	inline double log<double>(double v)
+	{
+		return ::log(v);
+	}
+	template<>
+	inline float log<float>(float v)
 	{
 		return ::log(v);
 	}
@@ -47,12 +57,22 @@ namespace tpp
 	{
 		return ::sin(v);
 	}
+	template<>
+	inline float sin<float>(float v) noexcept
+	{
+		return ::sin(v);
+	}
 
 	template <typename T>
 	T cos(T v) noexcept;
 
 	template<>
 	inline double cos<double>(double v) noexcept
+	{
+		return ::cos(v);
+	}
+	template<>
+	inline float cos<float>(float v) noexcept
 	{
 		return ::cos(v);
 	}
@@ -65,6 +85,11 @@ namespace tpp
 	{
 		return ::fabs(v);
 	}
+	template<>
+	inline float abs<float>(float v) noexcept
+	{
+		return ::fabs(v);
+	}
 
 	template <typename T>
 	inline T rand() noexcept;
@@ -74,6 +99,11 @@ namespace tpp
 	{
 		return (double)(((double)::rand())/(double)RAND_MAX+::rand())/(double)(RAND_MAX);
 	}
+	template <>
+	inline float rand<float>() noexcept
+	{
+		return (float)(((float)::rand())/(float)RAND_MAX+::rand())/(float)(RAND_MAX);
+	}
 
 	template <typename T>
 	T norm_rand() noexcept;
@@ -82,6 +112,11 @@ namespace tpp
 	inline double norm_rand<double>() noexcept
 	{
 		return sqrt<double>(-2.0*log<double>(1.0-rand<double>()))*cos<double>(2.0*M_PI*rand<double>());
+	}
+	template<>
+	inline float norm_rand<float>() noexcept
+	{
+		return sqrt<float>(-2.0*log<float>(1.0-rand<float>()))*cos<float>(2.0*M_PI*rand<float>());
 	}
 
 

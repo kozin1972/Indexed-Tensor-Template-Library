@@ -13,7 +13,7 @@
 #include <tppindex.h>
 #include <tsequence.h>
 
-namespace tpp
+namespace iTTL
 {
 
 //	template <typename T, size_t ... SIZE>
@@ -97,19 +97,19 @@ namespace tpp
     template<std::size_t __i, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename... _Elements>
 	constexpr const __stuple_element_t<__i, stuple<SNUM, CONT, IS_INDEXED, OST, _Elements...>>&
 	get(const stuple<SNUM, CONT, IS_INDEXED, OST, _Elements...>& __t) noexcept
-	{ return tpp::__get_helper<__i>(__t); }
+	{ return iTTL::__get_helper<__i>(__t); }
 
     template<std::size_t __i, size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename... _Elements>
 	constexpr __stuple_element_t<__i, stuple<SNUM, CONT, IS_INDEXED, OST, _Elements...>>&
 	get(stuple<SNUM, CONT, IS_INDEXED, OST, _Elements...>& __t) noexcept
-	{ return tpp::__get_helper<__i>(__t); }
+	{ return iTTL::__get_helper<__i>(__t); }
 
 
 	template <typename ST, typename ... IND>
 	struct parenthesis;
 
 //	template <size_t INUM, typename ST>
-//	constexpr size_t position_number() { return tpp::get<INUM>(typename ST::active_shape_indices{}); }
+//	constexpr size_t position_number() { return iTTL::get<INUM>(typename ST::active_shape_indices{}); }
 
 	template <size_t INUM, typename SHAPES>
 	struct position_number;
@@ -252,7 +252,7 @@ namespace tpp
 					element_type(get<I>(ost)),
 					base_type(inds, ost) {}
 		template <typename OST, int ... V_TYPE>
-		inline stuple_base(const OST& ost, tpp::integer_sequence<int, V_TYPE...> vn):
+		inline stuple_base(const OST& ost, iTTL::integer_sequence<int, V_TYPE...> vn):
 					element_type(valence_remover<OST, V_TYPE...>::template shape<I>(ost)),
 					base_type(ost, vn) {}
 		stuple_base() = default;
@@ -267,7 +267,7 @@ namespace tpp
 		template <typename OST, typename ... Ts>
 		inline stuple_base(const std::tuple<Ts...>& inds, const OST& ost) noexcept {}
 		template <typename OST, int ... V_TYPE>
-		inline stuple_base(const OST& ost, tpp::integer_sequence<int, V_TYPE...> vn) noexcept {}
+		inline stuple_base(const OST& ost, iTTL::integer_sequence<int, V_TYPE...> vn) noexcept {}
 		stuple_base() = default;
 	};
 
@@ -1024,26 +1024,26 @@ namespace tpp
 
 
 	template <typename ST, typename ... NSC, size_t CPOS, size_t INUM, size_t ... NPOS, size_t ... POS, size_t CONT, typename OST, int ... VN, int VNC, int ... VN_CHK, bool PREV_REMOVED, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int, VNC, VN_CHK...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
-		public valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int, VN_CHK...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>
+	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int, VNC, VN_CHK...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
+		public valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int, VN_CHK...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>
 	{
 	};
 
 	template <typename ST, typename ... NSC, size_t CPOS, size_t INUM, size_t ... NPOS, size_t ... POS, size_t CONT, typename OST, int ... VN, bool PREV_REMOVED, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
-		public valence_remover_base<ST, type_sequence<NSC..., sClass<V_TYPE, (PREV_REMOVED && USAGE==USAGE_FULL?USAGE_CONT:USAGE), USE_ALSO, PARENT> >, CPOS+1, INUM, tpp::index_sequence<NPOS..., sizeof...(NSC)>, tpp::index_sequence<POS..., CPOS>, CONT, OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int, VN...>, false, SHAPES...>
+	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
+		public valence_remover_base<ST, type_sequence<NSC..., sClass<V_TYPE, (PREV_REMOVED && USAGE==USAGE_FULL?USAGE_CONT:USAGE), USE_ALSO, PARENT> >, CPOS+1, INUM, iTTL::index_sequence<NPOS..., sizeof...(NSC)>, iTTL::index_sequence<POS..., CPOS>, CONT, OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int, VN...>, false, SHAPES...>
 	{
 	};
 
 	template <typename ST, typename ... NSC, size_t CPOS, size_t INUM, size_t... NPOS, size_t ... POS, size_t CONT, typename OST, int ... VN, int ... VN_CHK, bool PREV_REMOVED, template <int, enum dSU, size_t, size_t> class sClass, int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT, typename ... SHAPES>
-	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int, V_TYPE, VN_CHK...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
-		public valence_remover_base<ST, type_sequence<NSC...>, CPOS+1, INUM+1, tpp::index_sequence<NPOS..., 0>, tpp::index_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int, VN...>, true, SHAPES...>
+	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, index_sequence<NPOS...>, index_sequence<POS...>, CONT, OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int, V_TYPE, VN_CHK...>, PREV_REMOVED, sClass<V_TYPE, USAGE, USE_ALSO, PARENT>, SHAPES...>:
+		public valence_remover_base<ST, type_sequence<NSC...>, CPOS+1, INUM+1, iTTL::index_sequence<NPOS..., 0>, iTTL::index_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int, VN...>, true, SHAPES...>
 	{
-		typedef valence_remover_base<ST, type_sequence<NSC...>, CPOS+1, INUM+1, tpp::index_sequence<NPOS..., 0>, tpp::index_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int, VN...>, true, SHAPES...> base;
+		typedef valence_remover_base<ST, type_sequence<NSC...>, CPOS+1, INUM+1, iTTL::index_sequence<NPOS..., 0>, iTTL::index_sequence<POS...>, (CONT<sizeof...(SHAPES)?CONT:sizeof...(SHAPES)), OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int, VN...>, true, SHAPES...> base;
 		template <typename T>
 		static void apply_numeric_index(ST& st, T *&p, const size_t *o)
 		{
-			static size_t inum=find<int, V_TYPE>(tpp::integer_sequence<int, VN...>{});
+			static size_t inum=find<int, V_TYPE>(iTTL::integer_sequence<int, VN...>{});
 			if (o[inum]>=get<CPOS>(st).length())
 				throw outOfBounds(o[inum], sizeof...(POS), get<CPOS>(st).length());
 			shapes_caller<T, CPOS, ST>::apply_numeric_index(st, p, o[inum]);
@@ -1052,26 +1052,26 @@ namespace tpp
 	};
 
 	template <typename ST, typename ... NSC, size_t CPOS, size_t INUM, size_t ... NPOS, size_t ... POS, size_t CONT, typename OST, int ... VN, int ... VN_CHK, bool PREV_REMOVED>
-	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, tpp::index_sequence<NPOS...>, tpp::index_sequence<POS...>, CONT, OST, tpp::integer_sequence<int, VN...>, tpp::integer_sequence<int, VN_CHK...>, PREV_REMOVED>:
-		public CORRECT_USE_ALSO<0, CONT, type_sequence<>, type_sequence<NSC...>, OST, tpp::index_sequence<NPOS...>, 0, tpp::index_sequence<NPOS...> >
+	struct valence_remover_base<ST, type_sequence<NSC...>, CPOS, INUM, iTTL::index_sequence<NPOS...>, iTTL::index_sequence<POS...>, CONT, OST, iTTL::integer_sequence<int, VN...>, iTTL::integer_sequence<int, VN_CHK...>, PREV_REMOVED>:
+		public CORRECT_USE_ALSO<0, CONT, type_sequence<>, type_sequence<NSC...>, OST, iTTL::index_sequence<NPOS...>, 0, iTTL::index_sequence<NPOS...> >
 	{
 		static_assert(INUM==sizeof...(VN), "Cannot remove incorrect valence");
 		template <typename T>
 		static void apply_numeric_index(ST& st, T *&p, const size_t *o) noexcept {}
 		template <size_t I>
-		inline static constexpr const typename ST::template element_type<get<I>(tpp::index_sequence<POS...>{})>& shape(const ST& st) noexcept
+		inline static constexpr const typename ST::template element_type<get<I>(iTTL::index_sequence<POS...>{})>& shape(const ST& st) noexcept
 		{
-			return get<get<I>(tpp::index_sequence<POS...>{})>(st);
+			return get<get<I>(iTTL::index_sequence<POS...>{})>(st);
 		}
 	};
 
 	template <size_t SNUM, size_t CONT, bool IS_INDEXED, typename OST, typename ... SHAPES, int ... V_TYPE>
 	struct valence_remover<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, V_TYPE...>:
-		public valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<>, 0, 0, tpp::index_sequence<>, tpp::index_sequence<>, CONT, OST, tpp::integer_sequence<int, V_TYPE...>, tpp::integer_sequence<int, V_TYPE...>, false, SHAPES...>
+		public valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<>, 0, 0, iTTL::index_sequence<>, iTTL::index_sequence<>, CONT, OST, iTTL::integer_sequence<int, V_TYPE...>, iTTL::integer_sequence<int, V_TYPE...>, false, SHAPES...>
 	{
-		static_assert(is_unique(tpp::integer_sequence<int, V_TYPE...>{}),"Valences must be unique");
-		typedef valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<>, 0, 0, tpp::index_sequence<>, tpp::index_sequence<>, CONT, OST, tpp::integer_sequence<int, V_TYPE...>, tpp::integer_sequence<int, V_TYPE...>, false, SHAPES...> base;
-		static typename base::type create_stuple(const stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>&st) { return typename base::type(st, tpp::integer_sequence<int, V_TYPE...>{}); }
+		static_assert(is_unique(iTTL::integer_sequence<int, V_TYPE...>{}),"Valences must be unique");
+		typedef valence_remover_base<stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>, type_sequence<>, 0, 0, iTTL::index_sequence<>, iTTL::index_sequence<>, CONT, OST, iTTL::integer_sequence<int, V_TYPE...>, iTTL::integer_sequence<int, V_TYPE...>, false, SHAPES...> base;
+		static typename base::type create_stuple(const stuple<SNUM, CONT, IS_INDEXED, OST, SHAPES...>&st) { return typename base::type(st, iTTL::integer_sequence<int, V_TYPE...>{}); }
 	};
 
 };

@@ -5,7 +5,7 @@
  *      Author: Alexey Kozin
  *
  *  The provided code illustrates the logic of gem procedure.
- *  gem is General Multiplication for tpp::TENSOR objects
+ *  gem is General Multiplication for iTTL::TENSOR objects
  *
  *  Possible output:
  *
@@ -50,9 +50,9 @@ void gem_logic()
 	DECLARE_defaultIndex(X);
 	DECLARE_defaultIndex(Y);
 //	Allocate memory for tensors
-	tpp::TENSOR<7> R({n_size,p_size,q_size,n_size,m_size,i_size,j_size});
-	tpp::TENSOR<4> A({n_size,x_size,k_size,m_size});
-	tpp::TENSOR<5> B({y_size,n_size,k_size,i_size,j_size});
+	iTTL::TENSOR<7> R({n_size,p_size,q_size,n_size,m_size,i_size,j_size});
+	iTTL::TENSOR<4> A({n_size,x_size,k_size,m_size});
+	iTTL::TENSOR<5> B({y_size,n_size,k_size,i_size,j_size});
 //	Allocate memory for C-style copy of tensors
 	double (*r)[p_size][q_size][n_size][m_size][i_size][j_size]=new double[n_size][p_size][q_size][n_size][m_size][i_size][j_size];
 	double (*a)[x_size][k_size][m_size]=new double[n_size][x_size][k_size][m_size];

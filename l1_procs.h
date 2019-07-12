@@ -5,19 +5,30 @@
  *      Author: Alexey Kozin
  *
  *  Please report bugs to tpptensor@mail.ru
- */
+*/
 
 #ifndef L1_PROCS_H_
 #define L1_PROCS_H_
 
 #include <tensor.h>
 
-template <typename T, typename STX, typename STU, typename STV>
-class BR_solver
+
+template <typename TTY, typename TTA, typename TTX>
+class BR_solver;
+
+template <typename TY, typename STY, typename TA, typename STA, typename TX, typename STX>
+class BR_solver<iTTL::tensor<TY, STY>, iTTL::tensor<TA, STA>, iTTL::tensor<TX, STX> >
 {
-//	tpp::test_shape_length<STX, STU, STV>::test(std::tuple<STX, STU, STV>(x, U, v));
-//  Test if U is a matrix
-	static_assert(STU::snum==2,"Matrix of coefficients for BR_solve_one should have 2 dimensions (should be a matrix)");
+	static_assert(typeid(TY)==typeid(TA),"BR_solver Y and A parameters have different element types");
+	static_assert(typeid(TX)==typeid(TA),"BR_solver X and A parameters have different element types");
+};
+
+template <typename T, typename STY, typename STA, typename STX>
+class BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >
+{
+//	iTTL::test_shape_length<STY, STA, STX>::test(std::tuple<STY, STA, STX>(y, A, x));
+//  Test if A is a matrix
+	static_assert(STA::snum==2,"Matrix of coefficients for BR_solve_one should have 2 dimensions (should be a matrix)");
 // 	valence_parser<>::type is a sequence of 8 sequence of valence_data structures
 //  Each of 8 sequences corresponds to a specific mask of valence
 //  If valence is present in a tensor number N, the (1<<N) bit of the mask is set
@@ -28,74 +39,74 @@ class BR_solver
 //  Each type sequence has static const element size
 //  Non-empty type sequences has a head type defined
 //  pos0, pos1, pos2 are position numbers of shape (dimension) of tensors included to the mask of the valence
-	typedef typename tpp::valence_parser<false, STX, STU, STV>::type vd_by_mask;
-	static_assert(tpp::tseq_element<1,vd_by_mask>::size==0,"x should not have free indices");
-	static_assert(tpp::tseq_element<2,vd_by_mask>::size==0,"U should not have free indices");
-	static_assert(tpp::tseq_element<3,vd_by_mask>::size==1,"x should be linked with U by one index");
-	static_assert(tpp::tseq_element<4,vd_by_mask>::size==0,"v should not have free indices");
-//	static_assert(tpp::tseq_element<5,vd_by_mask>::size<=1,"x and v can be linked by at most 1 index");
-	static_assert(tpp::tseq_element<5,vd_by_mask>::size==0,"multiple solution is not supported");
-	static_assert(tpp::tseq_element<6,vd_by_mask>::size==1,"v should be linked with U by one index");
-	static_assert(tpp::tseq_element<7,vd_by_mask>::size==0,"Through indices are not supported yet");
+	typedef typename iTTL::valence_parser<false, STY, STA, STX>::type vd_by_mask;
+	static_assert(iTTL::tseq_element<1,vd_by_mask>::size==0,"y should not have free indices");
+	static_assert(iTTL::tseq_element<2,vd_by_mask>::size==0,"A should not have free indices");
+	static_assert(iTTL::tseq_element<3,vd_by_mask>::size==1,"y should be linked with A by one index");
+	static_assert(iTTL::tseq_element<4,vd_by_mask>::size==0,"x should not have free indices");
+//	static_assert(iTTL::tseq_element<5,vd_by_mask>::size<=1,"y and x can be linked by at most 1 index");
+	static_assert(iTTL::tseq_element<5,vd_by_mask>::size==0,"multiple solution is not supported");
+	static_assert(iTTL::tseq_element<6,vd_by_mask>::size==1,"x should be linked with A by one index");
+	static_assert(iTTL::tseq_element<7,vd_by_mask>::size==0,"Through indices are not supported yet");
+	size_t ysize;
 	size_t xsize;
-	size_t vsize;
 	size_t msize;
-	size_t Asize;
-	tpp::MATRIX<> A;
+	size_t Wsize;
+	iTTL::MATRIX<T> W;
 //  Valences of our tensors are known. They are stored as static members in valence_data type
 //  We create indices of known valences using usual C++ syntax
-	tpp::segmentIndex<tpp::tseq_element<6,vd_by_mask>::head::v_type> vi;
-	tpp::segmentIndex<tpp::tseq_element<3,vd_by_mask>::head::v_type> xi;
-	tpp::defaultIndex<tpp::tseq_element<6,vd_by_mask>::head::v_type> I;
-	tpp::defaultIndex<tpp::tseq_element<3,vd_by_mask>::head::v_type> J;
-	tpp::VECTOR<> AP;
-	tpp::VECTOR<> AQ;
-	tpp::VECTOR<> S;
-	tpp::shared_container<std::vector<size_t> > soZ;
+	iTTL::segmentIndex<iTTL::tseq_element<6,vd_by_mask>::head::v_type> xi;
+	iTTL::segmentIndex<iTTL::tseq_element<3,vd_by_mask>::head::v_type> yi;
+	iTTL::defaultIndex<iTTL::tseq_element<6,vd_by_mask>::head::v_type> I;
+	iTTL::defaultIndex<iTTL::tseq_element<3,vd_by_mask>::head::v_type> J;
+	iTTL::VECTOR<T> WP;
+	iTTL::VECTOR<T> WQ;
+	iTTL::VECTOR<T> S;
+	iTTL::shared_container<std::vector<size_t> > soZ;
 	std::vector<T> ratio;
 	std::vector<size_t> idx;
-	tpp::shared_container<std::vector<size_t> > QC;
+	iTTL::shared_container<std::vector<size_t> > QC;
 	std::vector<size_t>& q;
-	tpp::VECTOR<T> hm;
-	tpp::VECTOR<T> g;
-	tpp::VECTOR<T> BS_coef;
-	tpp::segmentIndex<tpp::tseq_element<3,vd_by_mask>::head::v_type> mi;
+	iTTL::VECTOR<T> hm;
+	iTTL::VECTOR<T> g;
+	iTTL::VECTOR<T> BS_coef;
+	iTTL::segmentIndex<iTTL::tseq_element<3,vd_by_mask>::head::v_type> mi;
 	void BR_iterations()
 	{
 //  Barrodale-Roberts iterations
 //  with Bloomfield and Steiger modification
 
-		auto Avq=A(vsize,J);
-		tpp::container<std::vector<size_t> >:: template index<tpp::tseq_element<3,vd_by_mask>::head::v_type> Z(soZ,0);
+		auto Wxq=W(xsize,J);
+		iTTL::container<std::vector<size_t> >:: template index<iTTL::tseq_element<3,vd_by_mask>::head::v_type> Z(soZ,0);
 
 		while(1)
 		{
 //			printf("Current matrix:\n");
 //			for (size_t j=0;j<msize;j++)
 //			{
-//				for (size_t i=0;i<vsize;i++)
-//					printf("%lf; ",(T&)A(i,j));
-//				printf("%lf\n",(T&)A(vsize,j));
+//				for (size_t i=0;i<xsize;i++)
+//					printf("%lf; ",(T&)W(i,j));
+//				printf("%lf\n",(T&)W(xsize,j));
 //			}
 
 			soZ.cont.clear();
 
-			S(mi).sign(A(vsize,mi));
+			S(mi).sign(W(xsize,mi));
 			for (size_t j=0;j<msize;j++)
 			{
-				if (Avq(j)==0.0)
+				if (Wxq(j)==0.0)
 					soZ.cont.push_back(j);
 			}
 
 			T minL=1.0;
 			size_t p=-1;
-			g(vi).gem(A(vi,mi),S(mi));
+			g(xi).gem(W(xi,mi),S(mi));
 			hm(I).asum(g(I));
-			g(vi).asum(A(vi,Z));
+			g(xi).asum(W(xi,Z));
 			g(I).axpy(hm(I),-1);
-			BS_coef(vi).asum(A(vi,mi));
+			BS_coef(xi).asum(W(xi,mi));
 			g(I).div(BS_coef(I));
-			for (size_t i=0;i<vsize;i++)
+			for (size_t i=0;i<xsize;i++)
 			{
 				T l=g(i);
 				if (l<minL)
@@ -112,14 +123,14 @@ class BR_solver
 
 // Solving subproblem for row p and destination in the last row. Finding q.
 
-			auto X=A(p,J);
-			auto Y=A(vsize,J);
+			auto Y=W(p,J);
+			auto D=W(xsize,J);
 			idx.clear();
 			for (size_t i=0;i<msize;i++)
 			{
-				if (tpp::abs((T&)X(i))>0.0)
+				if (iTTL::abs((T&)Y(i))>0.0)
 				{
-					ratio[i]=(T&)Y(i)/X(i);
+					ratio[i]=(T&)D(i)/Y(i);
 					idx.push_back(i);
 				}
 			}
@@ -138,20 +149,20 @@ class BR_solver
 			{
 				size_t *pli=idx.data();
 				size_t *pri=&(*idx.rbegin());
-				T suml=tpp::abs((T&)X(*pli));
-				T sumr=tpp::abs((T&)X(*pri));
-				T *x=&(T&)X(0);
+				T suml=iTTL::abs((T&)Y(*pli));
+				T sumr=iTTL::abs((T&)Y(*pri));
+				T *y=&(T&)Y(0);
 				while (pri>pli+1)
 				{
 					if (suml<sumr)
 					{
 						pli++;
-						suml+=tpp::abs<T>(x[*pli]);
+						suml+=iTTL::abs<T>(y[*pli]);
 					}
 					else
 					{
 						pri--;
-						sumr+=tpp::abs<T>(x[*pri]);
+						sumr+=iTTL::abs<T>(y[*pri]);
 					}
 				}
 				if (suml<sumr)
@@ -164,122 +175,130 @@ class BR_solver
 
 //		printf("zqty=%llu, p=%llu, q[p]=%llu\n",(unsigned long long)soZ.cont.size(),(unsigned long long)p,(unsigned long long)q[p]);
 
-			T sc=1.0/A(p,q[p]);
-			A(p,J).scal(sc);
-			AP(J)=A(p,J);
-			AQ(I)=A(I,q[p]);
-			AQ(p)=0;
-			A(I,J).gem(AP(J),AQ(I),-1,1);
-			A(J,q[p])=0;
-			A(p,q[p])=1;
+			T sc=1.0/W(p,q[p]);
+			W(p,J).scal(sc);
+			WP(J)=W(p,J);
+			WQ(I)=W(I,q[p]);
+			WQ(p)=0;
+			W(I,J).gem(WP(J),WQ(I),-1,1);
+			W(J,q[p])=0;
+			W(p,q[p])=1;
 		}
 	}
 public:
-	BR_solver(const tpp::tensor<T, STX>& x, const tpp::tensor<T, STU>& U, tpp::tensor<T, STV>& v, T ridge=0.0):
-	xsize(tpp::get<tpp::tseq_element<3,vd_by_mask>::head::pos0>(x).length()),
-	vsize(tpp::get<tpp::tseq_element<6,vd_by_mask>::head::pos1>(v).length()),
-	msize(ridge==0.0?xsize:xsize+vsize),
-	Asize(msize+vsize),
-	A({vsize+1, Asize}),
-	vi(vsize,0),
+	BR_solver(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>& x, T ridge=0.0):
+	ysize(iTTL::get<iTTL::tseq_element<3,vd_by_mask>::head::pos0>(y).length()),
+	xsize(iTTL::get<iTTL::tseq_element<6,vd_by_mask>::head::pos1>(x).length()),
+	msize(ridge==0.0?ysize:ysize+xsize),
+	Wsize(msize+xsize),
+	W({xsize+1, Wsize}),
 	xi(xsize,0),
-//	vi2(vsize,0),
-	AP({Asize}),
-	AQ({vsize+1}),
+	yi(ysize,0),
+//	vi2(xsize,0),
+	WP({Wsize}),
+	WQ({xsize+1}),
 	S({msize}),
 	soZ(msize),
-	ratio(Asize),
-	idx(Asize),
-	QC(vsize),
+	ratio(Wsize),
+	idx(Wsize),
+	QC(xsize),
 	q(QC.cont),
-	hm({vsize}),
-	g({vsize}),
-	BS_coef({vsize}),
+	hm({xsize}),
+	g({xsize}),
+	BS_coef({xsize}),
 	mi(msize,0)
 	{
-//  Barrodale-Roberts method. Finds v to optimize sum(abs( x-Uv )) + sum(abs(ridge*v)) --> min
+//  Barrodale-Roberts method. Finds x to optimize sum(abs( y-Ax )) + sum(abs(ridge*x)) --> min
 //
 //	ridge is an optional RIDGE-like non-negative coefficient.
-//	The physical units of ridge is the same as the dimension of U(i,j).
-//	So, if U(i,j) contains meters, ridge contains meters also.
-//	If coefficients of U have different physical units, only 0 value for ridge makes sense
-//	You should normalize U correctly if U coefficients are heterogeneous before using positive value for ridge
+//	The physical units of ridge is the same as the dimension of A(i,j).
+//	So, if A(i,j) contains meters, ridge contains meters also.
+//	If coefficients of A have different physical units, only 0 value for ridge makes sense
+//	You should normalize A correctly if A coefficients are heterogeneous before using positive value for ridge
 //  Test if lengths of correspondent indices are equal
-		tpp::check_shape_length<vd_by_mask>(x, U, v);
+//		static_assert(std::is_same<T,TA>::value,"Type of elements are different for Y and A");
+//		static_assert(std::is_same<T,TX>::value,"Type of elements are different for Y and X");
+		iTTL::check_shape_length<vd_by_mask>(y, A, x);
 
-//      Now we copy the matrix U and x to the beginning of A
-		A(vi,xi)=U;
-		A(vsize,xi)=x;
+//      Now we copy the matrix A and y to the beginning of W
+		W(xi,yi)=A;
+		W(xsize,yi)=y;
 		if (ridge!=0.0)
 		{
-			A(J,vi+xsize)=0.0;
-			A(vi,vi+xsize)=ridge;
+			W(J,xi+ysize)=0.0;
+			W(xi,xi+ysize)=ridge;
 		}
-		A(J,vi+msize)=0.0;
-		A(vi,vi+msize)=1.0;
+		W(J,xi+msize)=0.0;
+		W(xi,xi+msize)=1.0;
 
-		for (size_t i=0;i<vsize;i++)
+		for (size_t i=0;i<xsize;i++)
 			q[i]=i+msize;
 		BR_iterations();
-		v=A(vsize,vi+msize);
-		v.scal(-1.0);
+		x=W(xsize,xi+msize);
+		x.scal(-1.0);
 
 //  The problem is currently solved. However errors are accumulated due to iterations
 //  Now we use the found solution completely defined by q as a starting point for the new short optimization cycle
 //  The new optimization usually just checks the result, however if errors are large the result could be corrected
 
 //		printf("Result matrix:\n");
-//		for (size_t j=0;j<Asize;j++)
+//		for (size_t j=0;j<Wsize;j++)
 //		{
-//			for (size_t i=0;i<vsize;i++)
-//				printf("%lf; ",(T&)A(i,j));
-//			printf("%lf\n",(T&)A(vsize,j));
+//			for (size_t i=0;i<xsize;i++)
+//				printf("%lf; ",(T&)W(i,j));
+//			printf("%lf\n",(T&)W(xsize,j));
 //		}
 
-		tpp::VECTOR<> CX({vsize});
+		iTTL::VECTOR<T> CY({xsize});
 
-		A(vi,xi)=U;
-		A(vsize,xi)=x;
+		W(xi,yi)=A;
+		W(xsize,yi)=y;
 		if (ridge!=0.0)
 		{
-			A(J,vi+xsize)=0.0;
-			A(vi,vi+xsize)=ridge;
+			W(J,xi+ysize)=0.0;
+			W(xi,xi+ysize)=ridge;
 		}
-		A(J,vi+msize)=0.0;
-		A(vi,vi+msize)=1.0;
+		W(J,xi+msize)=0.0;
+		W(xi,xi+msize)=1.0;
 
-		DECLARE_segmentIndex(vi2, vsize, 0);
-		auto Qi=tpp::index_creator<tpp::container<std::vector<size_t>>::index>::create(vi2,QC,0);
-		auto lu=A(vi,Qi).lu();
-		if (lu.solve(A(vi,J)))
+		DECLARE_segmentIndex(xi2, xsize, 0);
+		auto Qi=iTTL::index_creator<iTTL::container<std::vector<size_t>>::index>::create(xi2,QC,0);
+		auto lu=W(xi,Qi).lu();
+		if (lu.solve(W(xi,J)))
 			return;
 
-		CX(vi2)=A(vsize,Qi);
-		A(vsize,J).gem(A(vi,J),CX(vi),-1.0,1.0);
-		A(I, Qi)=0.0;
-		A(vi2, Qi)=1.0;
+		CY(xi2)=W(xsize,Qi);
+		W(xsize,J).gem(W(xi,J),CY(xi),-1.0,1.0);
+		W(I, Qi)=0.0;
+		W(xi2, Qi)=1.0;
 
 	//	printf("\nCorrected matrix:\n");
-	//	for (size_t j=0;j<Asize;j++)
+	//	for (size_t j=0;j<Wsize;j++)
 	//	{
-	//		for (size_t i=0;i<vsize;i++)
-	//			printf("%lf; ",(T&)A(i,j));
-	//		printf("%lf\n",(T&)A(vsize,j));
+	//		for (size_t i=0;i<xsize;i++)
+	//			printf("%lf; ",(T&)W(i,j));
+	//		printf("%lf\n",(T&)W(xsize,j));
 	//	}
 
 		BR_iterations();
 
-		v=A(vsize,vi+msize);
-		v.scal(-1.0);
+		x=W(xsize,xi+msize);
+		x.scal(-1.0);
 	}
 };
 
-template <typename T, typename STX, typename STU, typename STV>
-void BR_solve_one(const tpp::tensor<T, STX>& x, const tpp::tensor<T, STU>& U, tpp::tensor<T, STV>&& v, T ridge=0.0)
+template <typename T, typename STY, typename STA, typename STX>
+void BR_solve_one(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>&& x, T ridge=0.0)
 {
-//    Barrodale-Roberts method. Finds v to optimize sum[ sum(abs( x-Uv )) + abs(ridge*v) ] --> min
-	BR_solver<T, STX, STU, STV>(x, U, v, ridge);
+//    Barrodale-Roberts method. Finds x to optimize sum[ sum(abs( y-Ax )) + abs(ridge*x) ] --> min
+	BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >(y, A, x, ridge);
 }
 
+template <typename T, typename STY, typename STA, typename STX>
+void BR_solve_one(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>& x, T ridge=0.0)
+{
+//    Barrodale-Roberts method. Finds x to optimize sum[ sum(abs( y-Ax )) + abs(ridge*x) ] --> min
+	BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >(y, A, x, ridge);
+}
 
 #endif /* L1_PROCS_H_ */

@@ -3,6 +3,9 @@
  *
  *  Created on: 30 мая 2019 г.
  *      Author: Alexey Kozin
+ *
+ *  Please report bugs to tpptensor@mail.ru
+ *
  */
 
 #ifndef SEQUENCE_H_
@@ -13,7 +16,7 @@
 #include <utility>
 
 
-namespace tpp
+namespace iTTL
 {
 
 #if __cplusplus <= 201103L

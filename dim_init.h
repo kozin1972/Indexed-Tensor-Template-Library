@@ -10,7 +10,7 @@
 #ifndef DIM_INIT_H_
 #define DIM_INIT_H_
 
-namespace tpp
+namespace iTTL
 {
 
 	struct aw_getter
