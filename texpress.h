@@ -10,7 +10,7 @@
 #ifndef TEXPRESS_H_
 #define TEXPRESS_H_
 
-namespace tpp
+namespace iTTL
 {
 
 	template <typename T, typename ST>

@@ -14,7 +14,7 @@
 #include <blas_tmpl.h>
 #include <smplmath.h>
 
-namespace tpp
+namespace iTTL
 {
 
 	template <typename T, typename STM, typename STV, typename M_FREE, typename V_FREE, typename COMMON, int COMARG, int VVM2, bool NORMAL>

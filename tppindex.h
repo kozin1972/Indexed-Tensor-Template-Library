@@ -18,7 +18,7 @@
 #include <cstring>
 #include <sstream>
 
-namespace tpp
+namespace iTTL
 {
 	class exception: public std::exception
 	{
@@ -138,6 +138,17 @@ namespace tpp
 		}
 	public:
 		MatrixIsNotSquareException(size_t (&shape)[2]): exception(message(shape)) {}
+	};
+	class DifferentTypesOfElements: public exception
+	{
+		char *DifferentTypesOfElements_mes(const char *method, const char *t0, const char *t1)
+		{
+			static char s[100];
+			sprintf(s,"Error. Different element types '%s' and '%s' are passed to '%s'\n", t0, t1, method);
+			return s;
+		}
+	public:
+		DifferentTypesOfElements(const char *method, const char *t0, const char *t1):exception(DifferentTypesOfElements_mes(method, t0, t1)) {}
 	};
 	template <typename T>
 	class shared_array
@@ -424,7 +435,7 @@ namespace tpp
 			using new_shape = segment<V_TYPE, (P_USAGE<USAGE_CONT?USAGE_CONT:P_USAGE) ,0, 0>;
 		};
 	};
-#define DECLARE_segmentIndex(I,length,offset) tpp::segmentIndex<__COUNTER__> I(length,offset);
+#define DECLARE_segmentIndex(I,length,offset) iTTL::segmentIndex<__COUNTER__> I(length,offset);
 
 	template <int V_TYPE, enum dSU USAGE, size_t USE_ALSO, size_t PARENT>
 	class forward;
@@ -599,7 +610,7 @@ namespace tpp
 			using new_shape = forward<V_TYPE, (P_USAGE<USAGE_ENUM?USAGE_ENUM:P_USAGE) ,0, 0>;
 		};
 	};
-#define DECLARE_forwardIndex(I,length,offset) tpp::forwardIndex<__COUNTER__> I(length,offset);
+#define DECLARE_forwardIndex(I,length,offset) iTTL::forwardIndex<__COUNTER__> I(length,offset);
 
 
 
@@ -760,7 +771,7 @@ namespace tpp
 			using new_shape = reverse<V_TYPE, (P_USAGE<USAGE_ENUM?USAGE_ENUM:P_USAGE) ,0, 0>;
 		};
 	};
-#define DECLARE_reverseIndex(I,length,offset) tpp::reverseIndex<__COUNTER__> I(length,offset);
+#define DECLARE_reverseIndex(I,length,offset) iTTL::reverseIndex<__COUNTER__> I(length,offset);
 
 
 	template <int V_TYPE>
@@ -787,7 +798,7 @@ namespace tpp
 			using new_shape=shapeClass<V_TYPE, P_USAGE, 0, 0>;
 		};
 	};
-#define DECLARE_defaultIndex(I) tpp::defaultIndex<__COUNTER__> I;
+#define DECLARE_defaultIndex(I) iTTL::defaultIndex<__COUNTER__> I;
 
 
 	template <int V_TYPE>
@@ -814,7 +825,7 @@ namespace tpp
 			using new_shape=forward<V_TYPE, (P_USAGE>USAGE_ENUM?P_USAGE:USAGE_ENUM), 0, 0>;
 		};
 	};
-#define DECLARE_simpleIndex(I) tpp::simpleIndex<__COUNTER__> I;
+#define DECLARE_simpleIndex(I) iTTL::simpleIndex<__COUNTER__> I;
 
 
 	template <typename CONTAINER>
@@ -996,7 +1007,7 @@ namespace tpp
 			};
 		};
 	};
-#define DECLARE_containerIndex(I,cont,offset) typename tpp::container<typename std::remove_reference<decltype(cont)>::type::base_container_type>::template index<__COUNTER__> I(cont,offset);
+#define DECLARE_containerIndex(I,cont,offset) typename iTTL::container<typename std::remove_reference<decltype(cont)>::type::base_container_type>::template index<__COUNTER__> I(cont,offset);
 
 	template<template <int> class indexClass>
 	struct index_creator

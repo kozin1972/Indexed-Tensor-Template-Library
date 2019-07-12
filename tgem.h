@@ -16,7 +16,7 @@
 #include <tvalence.h>
 #include <blas_tmpl.h>
 
-namespace tpp
+namespace iTTL
 {
 
 	template <typename T, typename STR, typename STA, typename STB, typename HEAD, typename BASE_LOOP>

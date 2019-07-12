@@ -14,7 +14,7 @@
 #include <blas_tmpl.h>
 #include <smplmath.h>
 
-namespace tpp
+namespace iTTL
 {
 
 	template <typename T, typename STR, typename STA, typename VD, typename BASE_LOOP>
