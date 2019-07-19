@@ -30,29 +30,29 @@
 
 #include <l1_procs.h>
 
-template <typename TTY, typename TTA, typename TTX>
-class BR_solver_runtime;
-
-template <typename TY, typename STY, typename TA, typename STA, typename TX, typename STX>
-class BR_solver_runtime<iTTL::tensor<TY, STY>, iTTL::tensor<TA, STA>, iTTL::tensor<TX, STX> >
-{
-public:
-	BR_solver_runtime(const iTTL::tensor<TY, STY>& y, const iTTL::tensor<TA, STA>& A, iTTL::tensor<TX, STX>& x, double ridge=0.0)
-	{
-		if (typeid(TY)!=typeid(TA))
-			throw iTTL::DifferentTypesOfElements("BR_solver parameters #1 (Y) and #2 (A)", typeid(TY).name(), typeid(TA).name());
-		if (typeid(TX)!=typeid(TA))
-			throw iTTL::DifferentTypesOfElements("BR_solver parameters #2 (A) and #3 (X)", typeid(TA).name(), typeid(TX).name());
-	}
-};
-
-template <typename T, typename STY, typename STA, typename STX>
-class BR_solver_runtime<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >:
-	public BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >
-{
-public:
-	inline BR_solver_runtime(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>& x, T ridge=0.0): BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >(y, A, x, ridge) {}
-};
+//template <typename TTY, typename TTA, typename TTX>
+//class BR_solver_runtime;
+//
+////template <typename TY, typename STY, typename TA, typename STA, typename TX, typename STX>
+////class BR_solver_runtime<iTTL::tensor<TY, STY>, iTTL::tensor<TA, STA>, iTTL::tensor<TX, STX> >
+////{
+////public:
+////	BR_solver_runtime(const iTTL::tensor<TY, STY>& y, const iTTL::tensor<TA, STA>& A, iTTL::tensor<TX, STX>& x, double ridge=0.0)
+////	{
+////		if (typeid(TY)!=typeid(TA))
+////			throw iTTL::DifferentTypesOfElements("BR_solver parameters #1 (Y) and #2 (A)", typeid(TY).name(), typeid(TA).name());
+////		if (typeid(TX)!=typeid(TA))
+////			throw iTTL::DifferentTypesOfElements("BR_solver parameters #2 (A) and #3 (X)", typeid(TA).name(), typeid(TX).name());
+////	}
+////};
+//
+//template <typename T, typename STY, typename STA, typename STX>
+//class BR_solver_runtime<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >:
+//	public BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >
+//{
+//public:
+//	inline BR_solver_runtime(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>& x, T ridge=0.0): BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >(y, A, x, ridge) {}
+//};
 
 /* Errors */
 static PyObject *L1_Error;
@@ -95,24 +95,23 @@ BR_solve(PyObject* self, PyObject* args)
         return NULL;
     }
 
-    PyArray_Descr *Yt=PyArray_DESCR(Y);
-    PyArray_Descr *At=PyArray_DESCR(A);
-    PyArray_Descr *Xt=PyArray_DESCR(X);
-	if (Yt->type_num!=At->type_num)
-	{
-		char errText[200];
-		sprintf(errText,"Error. Different element types '%s' and '%s' are passed to BR_solver parameters #1 (Y) and #2 (A)", Yt->typeobj->tp_name, At->typeobj->tp_name);
-        PyErr_SetString(L1_Error, errText);
-        return NULL;
-	}
-	if (At->type_num!=Xt->type_num)
-	{
-		char errText[200];
-		sprintf(errText,"Error. Different element types '%s' and '%s' are passed to BR_solver parameters #2 (A) and #3 (X)", At->typeobj->tp_name, Xt->typeobj->tp_name);
-        PyErr_SetString(L1_Error, errText);
-        return NULL;
-	}
-
+//    PyArray_Descr *Yt=PyArray_DESCR(Y);
+//    PyArray_Descr *At=PyArray_DESCR(A);
+//    PyArray_Descr *Xt=PyArray_DESCR(X);
+//	if (Yt->type_num!=At->type_num)
+//	{
+//		char errText[200];
+//		sprintf(errText,"Error. Different element types '%s' and '%s' are passed to BR_solver parameters #1 (Y) and #2 (A)", Yt->typeobj->tp_name, At->typeobj->tp_name);
+//        PyErr_SetString(L1_Error, errText);
+//        return NULL;
+//	}
+//	if (At->type_num!=Xt->type_num)
+//	{
+//		char errText[200];
+//		sprintf(errText,"Error. Different element types '%s' and '%s' are passed to BR_solver parameters #2 (A) and #3 (X)", At->typeobj->tp_name, Xt->typeobj->tp_name);
+//        PyErr_SetString(L1_Error, errText);
+//        return NULL;
+//	}
 
 //    npy_intp datatype=PyArray_TYPE(Y);
 //    if (datatype!=PyArray_TYPE(A) || datatype!=PyArray_TYPE(X))
@@ -132,6 +131,7 @@ BR_solve(PyObject* self, PyObject* args)
 //        PyErr_SetString(L1_Error, "This type of array elements is not supported currently");
 //        return NULL;
 //    }
+
 
 // Get shapes of arrays
     npy_intp *dY = PyArray_SHAPE(Y);
@@ -182,7 +182,7 @@ BR_solve(PyObject* self, PyObject* args)
     		auto vj=iTTL::ind_tenpy(X,J);
 //    		printf("Normal A\n");
 
-    		iTTL::createObjectPy<BR_solver_runtime>(yi,uij,vj,ridge);
+    		iTTL::createObjectPySimple<BR_solver>(yi,uij,vj,ridge);
 //    		iTTL::classCreator<BR_solver, void, iTTL::type_sequence<>, iTTL::type_sequence<>, decltype(yi), decltype(uij), decltype(vj), double>::create_class(yi,uij,vj,ridge);
 //			typedef iTTL::segment<1, iTTL::USAGE_CONT, 0, 0> sYt;
 //			typedef iTTL::segment<1, iTTL::USAGE_CONT, 0, 0> sA0t;
@@ -216,7 +216,7 @@ BR_solve(PyObject* self, PyObject* args)
     		auto uji=iTTL::ind_tenpy(A,J,I);
     		auto vj=iTTL::ind_tenpy(X,J);
 //    		printf("Transposed A\n");
-    		iTTL::createObjectPy<BR_solver_runtime>(yi,uji,vj,ridge);
+    		iTTL::createObjectPySimple<BR_solver>(yi,uji,vj,ridge);
 //
 //    		typedef iTTL::segment<1, iTTL::USAGE_CONT, 0, 0> sYt;
 //			typedef iTTL::segment<2, iTTL::USAGE_CONT, 0, 0> sA0t;

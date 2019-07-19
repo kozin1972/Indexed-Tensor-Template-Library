@@ -15,6 +15,48 @@
 
 namespace iTTL
 {
+
+	template <typename T0, typename T1>
+	struct large_type2;
+
+	template <>
+	struct large_type2<float, float>
+	{
+		typedef float type;
+	};
+
+	template <>
+	struct large_type2<float, double>
+	{
+		typedef double type;
+	};
+
+	template <>
+	struct large_type2<double, double>
+	{
+		typedef double type;
+	};
+
+	template <>
+	struct large_type2<double, float>
+	{
+		typedef double type;
+	};
+
+	template <typename T, typename ... Ts>
+	struct large_type;
+
+	template <typename T0, typename T1, typename ... Ts>
+	struct large_type<T0, T1, Ts...>: public large_type<typename large_type2<T0, T1>::type, Ts...>
+	{
+	};
+
+	template <typename T>
+	struct large_type<T>
+	{
+		typedef T type;
+	};
+
 	template <typename T>
 	inline T sign(T v) noexcept
 	{

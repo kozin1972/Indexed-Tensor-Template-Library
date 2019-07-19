@@ -13,6 +13,7 @@
 #include <tvalence.h>
 #include <tgem.h>
 #include <tcopy.h>
+#include <convert.h>
 #include <taxpy.h>
 #include <tdiv.h>
 #include <tgesv.h>
@@ -327,6 +328,18 @@ public:
 			runner.run_copy(this->data, A.data);
 			return *this;
 		}
+		template <typename TA>
+		tensor& operator=(const tensor<TA, ST>& A)
+		{
+			typedef typename valence_parser<true, ST, ST>::type vd_type;
+			check_shape_length<vd_type>(*this, A);
+			typedef typename join_valence_data<vd_type>::type jvd_type;
+			static_assert(iTTL::tseq_element<2,vd_type>::size==0, "Free argument index in not allowed");
+//			test_shape_length<ST, ST>::test(std::tuple<ST, ST>(*this,A));
+			typename convert_runner<T, TA, ST, ST, jvd_type>::type runner(*this, A);
+			runner.run_convert(this->data, A.data);
+			return *this;
+		}
 		template <typename STA>
 		tensor& operator=(const tensor<T, STA>& A)
 		{
@@ -338,6 +351,20 @@ public:
 //			test_shape_length<ST, STA>::test(std::tuple<ST, STA>(*this,A));
 			typename copy_runner<T, ST, STA, jvd_type>::type runner(*this, A);
 			runner.run_copy(this->data, A.data);
+			return *this;
+		}
+		template <typename TA, typename STA>
+		tensor& operator=(const tensor<TA, STA>& A)
+		{
+			static_assert(IS_INDEXED,"Only non-indexed tensor of the same dimension can be converted to non-indexed tensor");
+			typedef typename valence_parser<true, ST, STA>::type vd_type;
+			check_shape_length<vd_type>(*this, A);
+			typedef typename join_valence_data<vd_type>::type jvd_type;
+			static_assert(iTTL::tseq_element<2,vd_type>::size==0, "Free argument index in not allowed");
+//			typename tseq_element<3,jvd_type>::head jvdv;
+//			test_shape_length<ST, STA>::test(std::tuple<ST, STA>(*this,A));
+			typename convert_runner<T, TA, ST, STA, jvd_type>::type runner(*this, A);
+			runner.run_convert(this->data, A.data);
 			return *this;
 		}
 		template <typename STA>

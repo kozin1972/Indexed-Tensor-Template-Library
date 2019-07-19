@@ -16,16 +16,18 @@
 template <typename TTY, typename TTA, typename TTX>
 class BR_solver;
 
+//template <typename TY, typename STY, typename TA, typename STA, typename TX, typename STX>
+//class BR_solver<iTTL::tensor<TY, STY>, iTTL::tensor<TA, STA>, iTTL::tensor<TX, STX> >
+//{
+//	static_assert(typeid(TY)==typeid(TA),"BR_solver Y and A parameters have different element types");
+//	static_assert(typeid(TX)==typeid(TA),"BR_solver X and A parameters have different element types");
+//};
+//
+//template <typename T, typename STY, typename STA, typename STX>
 template <typename TY, typename STY, typename TA, typename STA, typename TX, typename STX>
 class BR_solver<iTTL::tensor<TY, STY>, iTTL::tensor<TA, STA>, iTTL::tensor<TX, STX> >
 {
-	static_assert(typeid(TY)==typeid(TA),"BR_solver Y and A parameters have different element types");
-	static_assert(typeid(TX)==typeid(TA),"BR_solver X and A parameters have different element types");
-};
-
-template <typename T, typename STY, typename STA, typename STX>
-class BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >
-{
+	typedef typename iTTL::large_type<TY, TA, TX>::type T;
 //	iTTL::test_shape_length<STY, STA, STX>::test(std::tuple<STY, STA, STX>(y, A, x));
 //  Test if A is a matrix
 	static_assert(STA::snum==2,"Matrix of coefficients for BR_solve_one should have 2 dimensions (should be a matrix)");
@@ -48,6 +50,7 @@ class BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX>
 	static_assert(iTTL::tseq_element<5,vd_by_mask>::size==0,"multiple solution is not supported");
 	static_assert(iTTL::tseq_element<6,vd_by_mask>::size==1,"x should be linked with A by one index");
 	static_assert(iTTL::tseq_element<7,vd_by_mask>::size==0,"Through indices are not supported yet");
+
 	size_t ysize;
 	size_t xsize;
 	size_t msize;
@@ -186,7 +189,7 @@ class BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX>
 		}
 	}
 public:
-	BR_solver(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>& x, T ridge=0.0):
+	BR_solver(const iTTL::tensor<TY, STY>& y, const iTTL::tensor<TA, STA>& A, iTTL::tensor<TX, STX>& x, T ridge=0.0):
 	ysize(iTTL::get<iTTL::tseq_element<3,vd_by_mask>::head::pos0>(y).length()),
 	xsize(iTTL::get<iTTL::tseq_element<6,vd_by_mask>::head::pos1>(x).length()),
 	msize(ridge==0.0?ysize:ysize+xsize),
@@ -218,6 +221,10 @@ public:
 //  Test if lengths of correspondent indices are equal
 //		static_assert(std::is_same<T,TA>::value,"Type of elements are different for Y and A");
 //		static_assert(std::is_same<T,TX>::value,"Type of elements are different for Y and X");
+//		int u0=(int)iTTL::check_shape<typename STA::template element_type<0>>::usage;
+//		int u1=(int)iTTL::check_shape<typename STA::template element_type<1>>::usage;
+//		printf("A-USAGE[0]=%d, A-USAGE[1]=%d\n", u0, u1);
+
 		iTTL::check_shape_length<vd_by_mask>(y, A, x);
 
 //      Now we copy the matrix A and y to the beginning of W
@@ -287,18 +294,20 @@ public:
 	}
 };
 
-template <typename T, typename STY, typename STA, typename STX>
-void BR_solve_one(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>&& x, T ridge=0.0)
+//template <typename T, typename STY, typename STA, typename STX>
+template <typename TY, typename STY, typename TA, typename STA, typename TX, typename STX>
+void BR_solve_one(const iTTL::tensor<TY, STY>& y, const iTTL::tensor<TA, STA>& A, iTTL::tensor<TX, STX>&& x, typename iTTL::large_type<TY, TA, TX>::type ridge=0.0)
 {
 //    Barrodale-Roberts method. Finds x to optimize sum[ sum(abs( y-Ax )) + abs(ridge*x) ] --> min
-	BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >(y, A, x, ridge);
+	BR_solver<iTTL::tensor<TY, STY>, iTTL::tensor<TA, STA>, iTTL::tensor<TX, STX> >(y, A, x, ridge);
 }
 
-template <typename T, typename STY, typename STA, typename STX>
-void BR_solve_one(const iTTL::tensor<T, STY>& y, const iTTL::tensor<T, STA>& A, iTTL::tensor<T, STX>& x, T ridge=0.0)
+//template <typename T, typename STY, typename STA, typename STX>
+template <typename TY, typename STY, typename TA, typename STA, typename TX, typename STX>
+void BR_solve_one(const iTTL::tensor<TY, STY>& y, const iTTL::tensor<TA, STA>& A, iTTL::tensor<TX, STX>& x, typename iTTL::large_type<TY, TA, TX>::type ridge=0.0)
 {
 //    Barrodale-Roberts method. Finds x to optimize sum[ sum(abs( y-Ax )) + abs(ridge*x) ] --> min
-	BR_solver<iTTL::tensor<T, STY>, iTTL::tensor<T, STA>, iTTL::tensor<T, STX> >(y, A, x, ridge);
+	BR_solver<iTTL::tensor<TY, STY>, iTTL::tensor<TA, STA>, iTTL::tensor<TX, STX> >(y, A, x, ridge);
 }
 
 #endif /* L1_PROCS_H_ */

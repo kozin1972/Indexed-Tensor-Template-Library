@@ -418,6 +418,79 @@ namespace iTTL
 	{
 		objectCreatorPy<clTmpl, iTTL::type_sequence<>, iTTL::type_sequence<>, Ts...>::create_object_py(args...);
 	}
+
+	template <template <typename...> class clTmpl, typename CT, typename AT, typename ... args>
+	struct objectCreatorPySimple;
+
+	template <template <typename...> class clTmpl, typename T, typename CT, typename AT, typename ... args>
+	struct objectCreatorPyMCSimple;
+
+	template <template <typename...> class clTmpl, typename T, typename ... CT, typename ... AT, int ... V_TYPE, typename ... Ts>
+	struct objectCreatorPyMCSimple<clTmpl, T, type_sequence<CT...>, type_sequence<AT...>, tensor_py<V_TYPE...>, Ts...>
+	{
+		inline static void create_object_py(AT... c_args, const tensor_py<V_TYPE...>& tpy, Ts... args)
+		{
+			typedef c_type_stuple<T, type_sequence<>, 0, V_TYPE...> TT0;
+			objectCreatorPySimple<clTmpl, type_sequence<CT..., typename TT0::type>, type_sequence<AT..., typename TT0::type>, Ts...>::create_object_py(c_args...,
+						TT0::wrap(sizeof...(AT), tpy.A, PyArray_SHAPE(tpy.A), PyArray_STRIDES(tpy.A)), args...);
+		}
+	};
+
+	template <template <typename...> class clTmpl, typename ... CT, typename ... AT, int ... V_TYPE, typename ... Ts>
+	struct objectCreatorPySimple<clTmpl, type_sequence<CT...>, type_sequence<AT...>, tensor_py<V_TYPE...>, Ts...>
+	{
+		inline static void create_object_py(AT... c_args, const tensor_py<V_TYPE...>& tpy, Ts... args)
+		{
+			npy_intp datatype=PyArray_TYPE(tpy.A);
+			switch (datatype)
+			{
+			case NPY_DOUBLE:
+				objectCreatorPyMCSimple<clTmpl, double, type_sequence<CT...>, type_sequence<AT...>, tensor_py<V_TYPE...>, Ts...>::create_object_py(c_args..., tpy, args...);
+				return;
+				break;
+			case NPY_FLOAT:
+				objectCreatorPyMCSimple<clTmpl, float, type_sequence<CT...>, type_sequence<AT...>, tensor_py<V_TYPE...>, Ts...>::create_object_py(c_args..., tpy, args...);
+				return;
+				break;
+			default:
+				PyArray_Descr *descr=PyArray_DESCR(tpy.A);
+				throw UnsupportedElementType(sizeof...(AT), descr->typeobj->tp_name);
+			}
+		}
+	};
+
+
+	template <template <typename...> class clTmpl, typename ... CT, typename ... AT, typename T0, typename ... Ts>
+	struct objectCreatorPySimple<clTmpl, type_sequence<CT...>, type_sequence<AT...>, T0, Ts...>
+	{
+		inline static void create_object_py(AT... c_args, T0 arg0, Ts... args)
+		{
+			objectCreatorPySimple<clTmpl, type_sequence<CT...>, type_sequence<AT..., T0>, Ts...>::create_object_py(c_args..., arg0, args...);
+		}
+	};
+	template <template <typename...> class clTmpl, typename ... CT, typename ... AT>
+	struct objectCreatorPySimple<clTmpl, type_sequence<CT...>, type_sequence<AT...> >
+	{
+		inline static void create_object_py(AT... c_args)
+		{
+			clTmpl<CT...> obj(c_args...);
+		}
+	};
+//	template <template <typename...> class clTmpl, typename ... CT, typename ... AT>
+//	struct objectCreatorPy<clTmpl, void, type_sequence<CT...>, type_sequence<AT...> >
+//	{
+//		inline static void create_object_py(AT... c_args)
+//		{
+//		}
+//	};
+
+
+	template <template <typename...> class clTmpl, typename ... Ts>
+	void createObjectPySimple(Ts... args)
+	{
+		objectCreatorPySimple<clTmpl, iTTL::type_sequence<>, iTTL::type_sequence<>, Ts...>::create_object_py(args...);
+	}
+
 };
 
 #endif /* TENPY_H_ */

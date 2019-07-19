@@ -109,6 +109,9 @@ void BLASFUNC(dgetrs)(const char *Trans, const BLAS_INTEGER *N, const BLAS_INTEG
 void BLASFUNC(sgetrs)(const char *Trans, const BLAS_INTEGER *N, const BLAS_INTEGER *NRHS, const float *A, const BLAS_INTEGER *LDA, BLAS_INTEGER *IPIV, float *B, const BLAS_INTEGER *LDB, BLAS_INTEGER *INFO);
 void BLASFUNC(dsyev)(const char *JOBZ, const char *UPLO, BLAS_INTEGER *N, double *A, BLAS_INTEGER *LDA, double *W, double *WORK, BLAS_INTEGER *LWORK, BLAS_INTEGER *INFO);
 void BLASFUNC(ssyev)(const char *JOBZ, const char *UPLO, BLAS_INTEGER *N, float *A, BLAS_INTEGER *LDA, float *W, float *WORK, BLAS_INTEGER *LWORK, BLAS_INTEGER *INFO);
+// converting float-double
+void BLASFUNC(slag2d)(const BLAS_INTEGER *M, const BLAS_INTEGER *N, const float *SA, const BLAS_INTEGER *LDSA, double *A, const BLAS_INTEGER *LDA, const BLAS_INTEGER *INFO);
+void BLASFUNC(dlag2s)(const BLAS_INTEGER *M, const BLAS_INTEGER *N, const double *A, const BLAS_INTEGER *LDA, float *SA, const BLAS_INTEGER *LDSA, const BLAS_INTEGER *INFO);
 
 }
 
@@ -469,6 +472,20 @@ template <>
 inline void getrs<float>(const char *Trans, const BLAS_INTEGER *N, const BLAS_INTEGER *NRHS, const float *A, const BLAS_INTEGER *LDA, BLAS_INTEGER *IPIV, float *B, const BLAS_INTEGER *LDB, BLAS_INTEGER *INFO)
 {
 	BLASFUNC(sgetrs)(Trans, N, NRHS, A, LDA, IPIV, B, LDB, INFO);
+}
+
+template <typename T0, typename T1>
+void lag2(const BLAS_INTEGER *M, const BLAS_INTEGER *N, const T0 *A0, const BLAS_INTEGER *LDA0, T1 *A1, const BLAS_INTEGER *LDA1, const BLAS_INTEGER *INFO);
+
+template <>
+inline void lag2<float, double>(const BLAS_INTEGER *M, const BLAS_INTEGER *N, const float *A0, const BLAS_INTEGER *LDA0, double *A1, const BLAS_INTEGER *LDA1, const BLAS_INTEGER *INFO)
+{
+	BLASFUNC(slag2d)(M, N, A0, LDA0, A1, LDA1, INFO);
+}
+template <>
+inline void lag2<double, float>(const BLAS_INTEGER *M, const BLAS_INTEGER *N, const double *A0, const BLAS_INTEGER *LDA0, float *A1, const BLAS_INTEGER *LDA1, const BLAS_INTEGER *INFO)
+{
+	BLASFUNC(dlag2s)(M, N, A0, LDA0, A1, LDA1, INFO);
 }
 
 
